@@ -1,0 +1,380 @@
+
+ nojs.js 说明文档
+=====================
+
+nojs.js 的理想是`消灭html中的javascript代码`，是`约定代替配置`思想在web前端的尝试。本文档对`nojs`的所有约定做详细说明。
+
+
+[TOC]
+
+
+可伸缩块
+----------------------
+
+可伸缩块包含`controller` 和 `content`,点击`controller`，会展开/折叠`content`。
+
+### 约定
+
+所有`class="collapsible"`的块都被定义为一个`可伸缩快`，其内部具有属性`for`的元素就是`controller`，`for`属性值表示`content`的`ID`。
+
+### 示例
+
+```
+<div class="collapsible">
+    <label for="collapsible1" style="cursor:pointer;">展开/折叠</label>
+
+    <div id="collapsible1">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+    </div>
+</div>
+```
+<div class="collapsible">
+    <label for="collapsible1" style="cursor:pointer;">展开/折叠</label>
+
+    <div id="collapsible1">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br />
+    </div>
+</div>
+
+checkbox 全选/取消联动
+-----------------------------
+
+*leader* 型`checkbox`发生改变时，会联动到 *member* 型`checkbox`上，反之亦然。
+
+### 约定
+
+所有包含`data-mamber` **属性** 的 `checkbox` 都被定义为 `leader`. 其`data-member`属性值表示需要联动的`member`型`checkbox`的`name`属性值。即一个`leader`只能联动同一`name`的`checkbox`，这组`name`相同的`checkbox`就是`leader`的`member`. `name`属性值称为 **联动名称**。
+
+`联动checkbox`能绑定`button`元素，当`member`没有一个被选中时，绑定的`button`会被设置成`disabled`状态。
+
+要完成`button`绑定只需给`button`元素添加`data-checkbox-require="$name"`属性，其中`$name`表示**联动名称**
+
+
+### 示例
+
+```
+<label><input type="checkbox" data-member="pks"/> 全选</label>
+<label><input type="checkbox" name="pks"/>选项1</label>
+<label><input type="checkbox" name="pks"/>选项2</label>
+<label><input type="checkbox" name="pks"/>选项3</label>
+<label><input type="checkbox" name="pks"/>选项4</label>
+<label><input type="checkbox" name="pks"/>选项5</label>
+<div>
+    <button class="btn btn-info" type="button" data-checkbox-require="pks">删除</button>
+</div>
+```
+<div class="demo">
+    <label><input type="checkbox" data-member="pks"/> 全选</label>
+    <label><input type="checkbox" name="pks"/>选项1</label>
+    <label><input type="checkbox" name="pks"/>选项2</label>
+    <label><input type="checkbox" name="pks"/>选项3</label>
+    <label><input type="checkbox" name="pks"/>选项4</label>
+    <label><input type="checkbox" name="pks"/>选项5</label>
+    <div>
+        <button class="btn btn-info" type="button" data-checkbox-require="pks">删除</button>
+    </div>
+</div>
+
+
+select 值绑定
+--------------------------
+
+给`select`加上`data-value`属性，该属性值对应的`option`即被选中。
+
+### 约定
+
+`select`的`data-value`属性值，即为该`select`的值，自动选中`value`等于该值的`option`。
+
+### 示例
+
+```
+<select data-value="5">
+    <option>--未选择--</option>
+    <option value="1">选项1</option>
+    <option value="2">选项2</option>
+    <option value="3">选项3</option>
+    <option value="4">选项4</option>
+    <option value="5">选项5</option>
+    <option value="6">选项6</option>
+</select>
+```
+<select data-value="5">
+    <option>--未选择--</option>
+    <option value="1">选项1</option>
+    <option value="2">选项2</option>
+    <option value="3">选项3</option>
+    <option value="4">选项4</option>
+    <option value="5">选项5</option>
+    <option value="6">选项6</option>
+</select>
+
+
+trim
+----------------------------
+
+文本框文本自动去除首尾空格.
+
+### 约定
+
+所有文本框（`input[type=text]`）在发生变化时，自动移除首尾空格。 除非该文本框拥有`data-skip-trim`属性.
+
+
+查询表单重置
+-------------------------------
+
+与普通的表单重置按钮不同，`查询表单`的`重置`需要清空所有查询条件，并立即提交查询表单。
+
+### 约定
+
+约定`<form class="lookup">`为查询表单，其内部拥有`class="reset"`的元素即为重置按钮，该按钮被点击后会清空查询表单的所有查询条件输入，并提交表单。
+
+
+模拟超链接（GET）
+---------------------------------
+
+将任意元素变成`<a>`标签，点击该元素会自动跳转。
+
+### 约定
+
+所有符合`class="action-get"`的元素被点击时会执行跳转，跳转地址为`data-href`属性值。该元素所有以`data-`开头的属性都会附加到URL的参数上。
+
+当该元素具有`data-confirm-require`属性时，跳转前会执行*先决条件*检查。`data-confirm-require`属性值为一个`jQuery 选择器`,该选择器创建的`jQuery`对象不存在时，会提示（`window.alert()`）条件未满足。可以为该元素添加`data-confirm-require-message`属性指定提示信息。
+
+当该元素具有`data-confirm`属性时，跳转前会弹出确认框（`window.confirm`）。`data-confirm`属性值可接受的类型为`boolean`或`string`（表示确认框文本信息）。
+
+### 示例
+
+```
+<p class="action-get"
+   data-href="lib/artDialog-5.0.4/index.html"
+   data-id="12"
+   data-confirm-require="[name=pks]:checked"
+   data-confirm-require-message="必须选中复选框"
+   data-confirm="您确认要跳转过去吗？\n跳转后请仔细查看浏览器的地址栏；\n按后退返回此页！"
+   style="cursor:pointer;" >
+    单击此处跳转到 ./lib/artDialog-5.0.4/index.html
+</p>
+<p><label><input type="checkbox" name="pks" />必选</label></p>
+```
+<p style="cursor:pointer;" class="action-get" data-href="lib/artDialog-5.0.4/index.html" data-id="12" data-confirm-require="[name=pks1]:checked" data-confirm-require-message="必须选中复选框" data-confirm="您确认要跳转过去吗？\n跳转后请仔细查看浏览器的地址栏；\n按后退返回此页！">单击此处跳转到 ./lib/artDialog-5.0.4/index.html</p>
+<p><label><input type="checkbox" name="pks1" />必选</label></p>
+
+
+
+模拟表单提交（POST）
+-------------------------------------
+
+将任意元素变成表单的提交按钮。
+
+### 约定
+
+所有符合`class="action-post"`的元素被点击时会提交`POST`请求。 请求地址为`data-href`属性值。该元素所有以`data-`开头的属性都会作为参数提交。
+
+当该元素具有`data-confirm-require`属性时，跳转前会执行*先决条件*检查。`data-confirm-require`属性值为一个`jQuery 选择器`,该选择器创建的`jQuery`对象不存在时，会提示（`window.alert()`）条件未满足。可以为该元素添加`data-confirm-require-message`属性指定提示信息。
+
+当该元素具有`data-confirm`属性时，跳转前会弹出确认框（`window.confirm`）。`data-confirm`属性值可接受的类型为`boolean`或`string`（表示确认框文本信息）。
+
+* 若元素具有`data-form`属性，则该属性值（`jQuery 选择器`）表示的表单元素即为提交请求的代理表单。修改代理表单`method=POST`,`action=请求地址`，然后提交代理表单。
+
+* 否则，若当前元素在某一表单内部，则直接修改该表单`method=POST`,`action=请求地址`，然后提交表单。
+
+* 否则，创建一个临时表单提交。
+
+### 示例
+
+```
+<button type="button" class="btn btn-info action-post"
+        data-form="#test-post-form"
+        data-href="lib/artDialog-5.0.4/index.html"
+        data-id="12"
+        data-confirm-require="[name=pks2]:checked" data-confirm-require-message="必须选中复选框"
+        data-confirm="您确认要跳转过去吗？\n跳转后请按F5刷新下页面看看是否确实是post提交；\n按后退返回此页！">
+    post 请求到 ./lib/artDialog-5.0.4/index.html
+</button>
+<form id="test-post-form">
+    <label><input type="checkbox" name="pks2" value="选中了pks"/>必选</label>
+</form>
+```
+<button type="button" class="btn btn-info action-post" data-form="#test-post-form" data-href="lib/artDialog-5.0.4/index.html" data-id="12" data-confirm-require="[name=pks]:checked" data-confirm-require-message="必须选中复选框" data-confirm="您确认要跳转过去吗？\n跳转后请按F5刷新下页面看看是否确实是post提交；\n按后退返回此页！">post 请求到 ./lib/artDialog-5.0.4/index.html</button>
+<form id="test-post-form">
+    <label><input type="checkbox" name="pks" value="选中了pks"/>必选</label>
+</form>
+
+模态窗口
+----------------------------------
+
+在任意元素上绑定弹出窗口. 该弹出窗口使用`ajax`加载内容。
+
+### 依赖
+
+`$.dialog`，参见 [artDialog](http://aui.github.io/artDialog/).
+
+### 约定
+
+符合`class="dialog"` 的元素会绑定弹出窗口。该元素称为**触发按钮**,**触发按钮**被点击时，弹出一个模态窗口并`ajax`载入一段内容。`ajax`请求地址为`data-url`属性值，请求参数包括所有`data-`开头的属性。
+
+**`ajax`请求的内容必须是一部分`html`代码，不能包含`<html> <head> <body>`等标签。**
+
+弹出的窗口默认有`保存`和`取消`两个按钮，其文字可以分别用`data-ok-value`和`data-cancel-value`来定义。**触发按钮包含属性`data-readonly=true`属性时，不显示`保存`按钮。**
+
+`保存`按钮的行为定义：
+在`ajax`载入的窗口内容中找到`form`元素，其内部的`button[type=submit]`按钮执行点击动作。
+### 属性
+
+|       名称        |       类型        |           说明            |   默认    |
+|-------------------|-------------------|---------------------------|-----------|
+|`data-readonly`    |`boolean`          |该值为`true`时，不显示保存按钮|`false`|
+|`data-url`         |`url`              |窗口内容的`ajax`请求地址|**必填、必须有效、必须返回html片段**|
+|`data-dialog-url`  |`url`|窗口内容中有`form`元素且`form`无`action`属性时有效，表示`保存`按钮点击后，表单的提交地址。若`form`元素无`action`属性，且属性未配置，则使用`data-url`代替。|`undefined`|
+|`data-title`       |`String`           |窗口标题|` `|
+|`data-ok-value`    |`String`           |保存按钮的文字|`保存`|
+|`data-cancel-value`|`String`           |取消按钮的文字|`取消`|
+|`data-width`       |`int`或`String`    |窗口宽度,`400`、`400px`或`10em`|自适应|
+|`data-height`      |`int`或`String`    |窗口高度,`600`、`600px`或`20em`|自适应|
+|`data-*`           |`String`           |任意自定义参数，会附加到`ajax`请求上|
+
+> 更多`artDialog`参数请参照[artDialog 选项](http://aui.github.io/artDialog/doc/index.html#option)
+
+### 事件
+
+`nojs-dialog-remote-ready`
+
+`ajax`载入内容成功后触发。
+
+```
+function (event,context){}
+```
+* `event`为`jQuery`事件参数
+* `context` 一些有用的上下文对象
+   * `context.module` : 本模块对象
+   * `context.dialog` : `artDialog`对象
+   * `context.$content`: 窗口内容.由`ajax`载入的`dom jQuery`封装
+   * `context.$form`  : 窗口内的表单`jQuery`封装. 若不包含表单，该`jQuery`长度为`0`.
+
+### 示例
+
+```
+<button type="button" class="btn btn-info dialog"
+        data-url="input.html"
+        data-title="弹出窗口"
+        data-id="12"
+        data-readonly="true">
+    弹出窗口
+</button>
+```
+<button type="button" class="btn btn-info dialog" data-url="input.html" data-title="弹出窗口" data-id="12" data-readonly="true">
+    弹出窗口
+</button>
+
+
+表单验证
+-----------------------------------
+
+使用`html5`语法对表单自动验证。
+
+### 依赖
+
+`$.fn.validate`，参见 [jqueryvalidation](http://jqueryvalidation.org/documentation/).
+
+### 约定
+
+符合`class="validate"`的表单会使用`jQuery Validation 插件`进行验证。具体的验证规则由`jQuery Validation`定义。
+
+使用`data-rule-*`来声明验证规则，`data-message-*`声明错误信息（可选）。
+
+
+### 示例
+
+```
+<form id="signInForm" class="validate" method="post" role="form" action="../authc/signIn">
+    <div class="form-group">
+        <input class="form-control" type="email" name="email" placeholder="电子邮箱"
+               data-rule-required="true"
+               data-msg-required="请输入您的电子邮箱"
+               data-rule-email="true"
+               data-msg-email="请输入格式正确的电子邮箱"
+               data-rule-maxlength="60"
+               data-rule-remote="js/validate-email.json"
+               data-msg-remote="该邮箱尚未注册"/>
+        <span class="icon-email"></span>
+    </div>
+    <div class="form-group">
+        <input type="password" name="password" class="form-control" placeholder="密码"
+               data-rule-required="true"
+               data-msg-required="请输入您的登陆密码"
+               data-rule-minlength="6"
+               data-msg-minlength="密码位数不得小于六位"/>
+        <span class="icon-password"></span>
+    </div>
+    <div class="form-group action">
+        <button id="login-action" type="submit" class="btn btn-primary btn-bg">登录</button>
+    </div>
+</form>
+```
+<form id="signInForm" class="validate" method="post" role="form" action="../authc/signIn">
+    <div class="form-group">
+        <input class="form-control" type="email" name="email" placeholder="电子邮箱" data-rule-required="true" data-msg-required="请输入您的电子邮箱" data-rule-email="true" data-msg-email="请输入格式正确的电子邮箱" data-rule-maxlength="60" data-rule-remote="js/validate-email.json" data-msg-remote="该邮箱尚未注册"/>
+        <span class="icon-email"></span>
+    </div>
+    <div class="form-group">
+        <input type="password" name="password" class="form-control" placeholder="密码" data-rule-required="true" data-msg-required="请输入您的登陆密码" data-rule-minlength="6" data-msg-minlength="密码位数不得小于六位"/>
+        <span class="icon-password"></span>
+    </div>
+    <div class="form-group action">
+        <button id="login-action" type="submit" class="btn btn-primary btn-bg">登录</button>
+    </div>
+</form>
+
+### 与`jQuery Form`联合使用
+
+`jQuery Form 插件`用来异步提交表单，验证表单建议使用以下代码模板：
+```javascript
+$("#yourForm").ajaxForm({
+	cache: false,
+	beforeSubmit: function(arr, $form, options) {
+	    return $form.data("validator").form();//在提交前验证表单
+	},
+	success: function(data, status, xhr, $form) {
+		//do your code.
+	},
+	error: function(xhr, status, ex, $form) {
+	    $form.data("validator").showErrors({"name": "操作失败"});//在`name`字段上显示表单验证错误信息。
+	}
+});
+```
+
+> 更多`jQuery Form 插件`相关信息参见 [jQuery Form Plugin](http://jquery.malsup.com/form/).
+
+nojs 事件
+---------------------------
+
+注意以下代码不能写在`jQuery`的`ready()`方法里。
+### 在模块加载前运行代码
+
+```javascript
+$nojs.before(function(context){
+    this; //表示nojs全局对象，等同于$nojs.
+    this.alternate.enable=false;    //禁用各行变色模块
+    this.validation.enable=false;   //禁用自动表单验证模块
+});
+```
+
+   > Written with [StackEdit](https://stackedit.io/).

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+        <meta charset="utf-8">
+
+        <title>nojs 说明文档</title>
+        <link rel="stylesheet" href="res-min/themes/base.css" />
+        <link rel="stylesheet" href="lib/artDialog-5.0.4/skins/green.css" />
+
+        <script type="text/javascript" src="lib/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+
+        <script src="lib/jquery-1.9.1.js"></script>
+        <script src="lib/jquery-validation/jquery.validate.min.js"></script>
+        <script src="lib/jquery-validation/additional-methods.js"></script>
+        <script src="lib/jquery-validation/messages_zh.js"></script>
+        <script src="lib/artDialog-5.0.4/jquery.artDialog.min.js"></script>
+        <script src="js/nojs.js"></script>
+</head>
+<body><div class="container"><h1 id="nojsjs-说明文档"> nojs.js 说明文档</h1>
+
+<p>nojs.js 的理想是<code>消灭html中的javascript代码</code>，是<code>约定代替配置</code>思想在web前端的尝试。本文档对<code>nojs</code>的所有约定做详细说明。</p>
+
+<p><div class="toc"><div class="toc">
+<ul>
+<li><a href="#nojsjs-说明文档"> nojs.js 说明文档</a><ul>
+<li><a href="#可伸缩块">可伸缩块</a><ul>
+<li><a href="#约定">约定</a></li>
+<li><a href="#示例">示例</a></li>
+</ul>
+</li>
+<li><a href="#checkbox-全选取消联动">checkbox 全选/取消联动</a><ul>
+<li><a href="#约定-1">约定</a></li>
+<li><a href="#示例-1">示例</a></li>
+</ul>
+</li>
+<li><a href="#select-值绑定">select 值绑定</a><ul>
+<li><a href="#约定-2">约定</a></li>
+<li><a href="#示例-2">示例</a></li>
+</ul>
+</li>
+<li><a href="#trim">trim</a><ul>
+<li><a href="#约定-2-1">约定</a></li>
+</ul>
+</li>
+<li><a href="#查询表单重置">查询表单重置</a><ul>
+<li><a href="#约定-3">约定</a></li>
+</ul>
+</li>
+<li><a href="#模拟超链接get">模拟超链接（GET）</a><ul>
+<li><a href="#约定-4">约定</a></li>
+<li><a href="#示例-3">示例</a></li>
+</ul>
+</li>
+<li><a href="#模拟表单提交post">模拟表单提交（POST）</a><ul>
+<li><a href="#约定-5">约定</a></li>
+<li><a href="#示例-4">示例</a></li>
+</ul>
+</li>
+<li><a href="#模态窗口">模态窗口</a><ul>
+<li><a href="#依赖">依赖</a></li>
+<li><a href="#约定-6">约定</a></li>
+<li><a href="#属性">属性</a></li>
+<li><a href="#事件">事件</a></li>
+<li><a href="#示例-5">示例</a></li>
+</ul>
+</li>
+<li><a href="#表单验证">表单验证</a><ul>
+<li><a href="#依赖-1">依赖</a></li>
+<li><a href="#约定-7">约定</a></li>
+<li><a href="#示例-6">示例</a></li>
+<li><a href="#与jquery-form联合使用">与jQuery Form联合使用</a></li>
+</ul>
+</li>
+<li><a href="#nojs-事件">nojs 事件</a><ul>
+<li><a href="#在模块加载前运行代码">在模块加载前运行代码</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</p><div class="se-section-delimiter"></div>
+
+<h2 id="可伸缩块">可伸缩块</h2>
+
+<p>可伸缩块包含<code>controller</code> 和 <code>content</code>,点击<code>controller</code>，会展开/折叠<code>content</code>。</p><div class="se-section-delimiter"></div>
+
+<h3 id="约定">约定</h3>
+
+<p>所有<code>class="collapsible"</code>的块都被定义为一个<code>可伸缩快</code>，其内部具有属性<code>for</code>的元素就是<code>controller</code>，<code>for</code>属性值表示<code>content</code>的<code>ID</code>。</p><div class="se-section-delimiter"></div>
+
+<h3 id="示例">示例</h3><div class="se-section-delimiter"></div>
+
+<pre style="" class="prettyprint prettyprinted"><code><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"collapsible"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;label</span><span class="pln"> </span><span class="atn">for</span><span class="pun">=</span><span class="atv">"collapsible1"</span><span class="pln"> </span><span class="atn">style</span><span class="pun">=</span><span class="atv">"</span><span class="pln">cursor</span><span class="pun">:</span><span class="pln">pointer</span><span class="pun">;</span><span class="atv">"</span><span class="tag">&gt;</span><span class="pln">展开/折叠</span><span class="tag">&lt;/label&gt;</span><span class="pln">
+
+    </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"collapsible1"</span><span class="tag">&gt;</span><span class="pln">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="tag">&lt;br</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="tag">&lt;br</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="tag">&lt;br</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="tag">&lt;br</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="tag">&lt;br</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="tag">&lt;br</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="tag">&lt;br</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="tag">&lt;br</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="tag">&lt;br</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><span class="tag">&lt;br</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+    </span><span class="tag">&lt;/div&gt;</span><span class="pln">
+</span><span class="tag">&lt;/div&gt;</span></code></pre>
+
+<div class="collapsible">
+    <label for="collapsible1" style="cursor:pointer;">展开/折叠</label>
+
+    <div id="collapsible1">
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+    </div>
+</div><div class="se-section-delimiter"></div>
+
+<h2 id="checkbox-全选取消联动">checkbox 全选/取消联动</h2>
+
+<p><em>leader</em> 型<code>checkbox</code>发生改变时，会联动到 <em>member</em> 型<code>checkbox</code>上，反之亦然。</p>
+
+<h3 id="约定-1">约定</h3>
+
+<p>所有包含<code>data-mamber</code> <strong>属性</strong> 的 <code>checkbox</code> 都被定义为 <code>leader</code>. 其<code>data-member</code>属性值表示需要联动的<code>member</code>型<code>checkbox</code>的<code>name</code>属性值。即一个<code>leader</code>只能联动同一<code>name</code>的<code>checkbox</code>，这组<code>name</code>相同的<code>checkbox</code>就是<code>leader</code>的<code>member</code>. <code>name</code>属性值称为 <strong>联动名称</strong>。</p>
+
+<p><code>联动checkbox</code>能绑定<code>button</code>元素，当<code>member</code>没有一个被选中时，绑定的<code>button</code>会被设置成<code>disabled</code>状态。</p>
+
+<p>要完成<code>button</code>绑定只需给<code>button</code>元素添加<code>data-checkbox-require="$name"</code>属性，其中<code>$name</code>表示<strong>联动名称</strong></p>
+
+<h3 id="示例-1">示例</h3><div class="se-section-delimiter"></div>
+
+<pre style="" class="prettyprint prettyprinted"><code><span class="tag">&lt;label&gt;&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span><span class="pln"> </span><span class="atn">data-member</span><span class="pun">=</span><span class="atv">"pks"</span><span class="tag">/&gt;</span><span class="pln"> 全选</span><span class="tag">&lt;/label&gt;</span><span class="pln">
+</span><span class="tag">&lt;label&gt;&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"pks"</span><span class="tag">/&gt;</span><span class="pln">选项1</span><span class="tag">&lt;/label&gt;</span><span class="pln">
+</span><span class="tag">&lt;label&gt;&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"pks"</span><span class="tag">/&gt;</span><span class="pln">选项2</span><span class="tag">&lt;/label&gt;</span><span class="pln">
+</span><span class="tag">&lt;label&gt;&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"pks"</span><span class="tag">/&gt;</span><span class="pln">选项3</span><span class="tag">&lt;/label&gt;</span><span class="pln">
+</span><span class="tag">&lt;label&gt;&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"pks"</span><span class="tag">/&gt;</span><span class="pln">选项4</span><span class="tag">&lt;/label&gt;</span><span class="pln">
+</span><span class="tag">&lt;label&gt;&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"pks"</span><span class="tag">/&gt;</span><span class="pln">选项5</span><span class="tag">&lt;/label&gt;</span><span class="pln">
+</span><span class="tag">&lt;div&gt;</span><span class="pln">
+    </span><span class="tag">&lt;button</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"btn btn-info"</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"button"</span><span class="pln"> </span><span class="atn">data-checkbox-require</span><span class="pun">=</span><span class="atv">"pks"</span><span class="tag">&gt;</span><span class="pln">删除</span><span class="tag">&lt;/button&gt;</span><span class="pln">
+</span><span class="tag">&lt;/div&gt;</span></code></pre>
+
+<div class="demo">
+    <label><input data-member="pks" type="checkbox"> 全选</label>
+    <label><input name="pks" type="checkbox">选项1</label>
+    <label><input name="pks" type="checkbox">选项2</label>
+    <label><input name="pks" type="checkbox">选项3</label>
+    <label><input name="pks" type="checkbox">选项4</label>
+    <label><input name="pks" type="checkbox">选项5</label>
+    <div>
+        <button class="btn btn-info" type="button" data-checkbox-require="pks">删除</button>
+    </div>
+</div><div class="se-section-delimiter"></div>
+
+<h2 id="select-值绑定">select 值绑定</h2>
+
+<p>给<code>select</code>加上<code>data-value</code>属性，该属性值对应的<code>option</code>即被选中。</p>
+
+<h3 id="约定-2">约定</h3>
+
+<p><code>select</code>的<code>data-value</code>属性值，即为该<code>select</code>的值，自动选中<code>value</code>等于该值的<code>option</code>。</p><div class="se-section-delimiter"></div>
+
+<h3 id="示例-2">示例</h3><div class="se-section-delimiter"></div>
+
+<pre style="" class="prettyprint prettyprinted"><code><span class="tag">&lt;select</span><span class="pln"> </span><span class="atn">data-value</span><span class="pun">=</span><span class="atv">"5"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;option&gt;</span><span class="pln">--未选择--</span><span class="tag">&lt;/option&gt;</span><span class="pln">
+    </span><span class="tag">&lt;option</span><span class="pln"> </span><span class="atn">value</span><span class="pun">=</span><span class="atv">"1"</span><span class="tag">&gt;</span><span class="pln">选项1</span><span class="tag">&lt;/option&gt;</span><span class="pln">
+    </span><span class="tag">&lt;option</span><span class="pln"> </span><span class="atn">value</span><span class="pun">=</span><span class="atv">"2"</span><span class="tag">&gt;</span><span class="pln">选项2</span><span class="tag">&lt;/option&gt;</span><span class="pln">
+    </span><span class="tag">&lt;option</span><span class="pln"> </span><span class="atn">value</span><span class="pun">=</span><span class="atv">"3"</span><span class="tag">&gt;</span><span class="pln">选项3</span><span class="tag">&lt;/option&gt;</span><span class="pln">
+    </span><span class="tag">&lt;option</span><span class="pln"> </span><span class="atn">value</span><span class="pun">=</span><span class="atv">"4"</span><span class="tag">&gt;</span><span class="pln">选项4</span><span class="tag">&lt;/option&gt;</span><span class="pln">
+    </span><span class="tag">&lt;option</span><span class="pln"> </span><span class="atn">value</span><span class="pun">=</span><span class="atv">"5"</span><span class="tag">&gt;</span><span class="pln">选项5</span><span class="tag">&lt;/option&gt;</span><span class="pln">
+    </span><span class="tag">&lt;option</span><span class="pln"> </span><span class="atn">value</span><span class="pun">=</span><span class="atv">"6"</span><span class="tag">&gt;</span><span class="pln">选项6</span><span class="tag">&lt;/option&gt;</span><span class="pln">
+</span><span class="tag">&lt;/select&gt;</span></code></pre>
+
+<p><select data-value="5"> 
+    <option>–未选择–</option> 
+    <option value="1">选项1</option> 
+    <option value="2">选项2</option> 
+    <option value="3">选项3</option> 
+    <option value="4">选项4</option> 
+    <option value="5">选项5</option> 
+    <option value="6">选项6</option> 
+</select></p><div class="se-section-delimiter"></div>
+
+<h2 id="trim">trim</h2>
+
+<p>文本框文本自动去除首尾空格.</p>
+
+<h3 id="约定-2-1">约定</h3>
+
+<p>所有文本框（<code>input[type=text]</code>）在发生变化时，自动移除首尾空格。 除非该文本框拥有<code>data-skip-trim</code>属性.</p>
+
+<h2 id="查询表单重置">查询表单重置</h2>
+
+<p>与普通的表单重置按钮不同，<code>查询表单</code>的<code>重置</code>需要清空所有查询条件，并立即提交查询表单。</p>
+
+<h3 id="约定-3">约定</h3>
+
+<p>约定<code>&lt;form class="lookup"&gt;</code>为查询表单，其内部拥有<code>class="reset"</code>的元素即为重置按钮，该按钮被点击后会清空查询表单的所有查询条件输入，并提交表单。</p>
+
+<h2 id="模拟超链接get">模拟超链接（GET）</h2>
+
+<p>将任意元素变成<code>&lt;a&gt;</code>标签，点击该元素会自动跳转。</p>
+
+<h3 id="约定-4">约定</h3>
+
+<p>所有符合<code>class="action-get"</code>的元素被点击时会执行跳转，跳转地址为<code>data-href</code>属性值。该元素所有以<code>data-</code>开头的属性都会附加到URL的参数上。</p>
+
+<p>当该元素具有<code>data-confirm-require</code>属性时，跳转前会执行<em>先决条件</em>检查。<code>data-confirm-require</code>属性值为一个<code>jQuery 选择器</code>,该选择器创建的<code>jQuery</code>对象不存在时，会提示（<code>window.alert()</code>）条件未满足。可以为该元素添加<code>data-confirm-require-message</code>属性指定提示信息。</p>
+
+<p>当该元素具有<code>data-confirm</code>属性时，跳转前会弹出确认框（<code>window.confirm</code>）。<code>data-confirm</code>属性值可接受的类型为<code>boolean</code>或<code>string</code>（表示确认框文本信息）。</p>
+
+<h3 id="示例-3">示例</h3>
+
+<pre style="" class="prettyprint prettyprinted"><code><span class="tag">&lt;p</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"action-get"</span><span class="pln">
+   </span><span class="atn">data-href</span><span class="pun">=</span><span class="atv">"lib/artDialog-5.0.4/index.html"</span><span class="pln">
+   </span><span class="atn">data-id</span><span class="pun">=</span><span class="atv">"12"</span><span class="pln">
+   </span><span class="atn">data-confirm-require</span><span class="pun">=</span><span class="atv">"[name=pks]:checked"</span><span class="pln">
+   </span><span class="atn">data-confirm-require-message</span><span class="pun">=</span><span class="atv">"必须选中复选框"</span><span class="pln">
+   </span><span class="atn">data-confirm</span><span class="pun">=</span><span class="atv">"您确认要跳转过去吗？\n跳转后请仔细查看浏览器的地址栏；\n按后退返回此页！"</span><span class="pln">
+   </span><span class="atn">style</span><span class="pun">=</span><span class="atv">"</span><span class="pln">cursor</span><span class="pun">:</span><span class="pln">pointer</span><span class="pun">;</span><span class="atv">"</span><span class="pln"> </span><span class="tag">&gt;</span><span class="pln">
+    单击此处跳转到 ./lib/artDialog-5.0.4/index.html
+</span><span class="tag">&lt;/p&gt;</span><span class="pln">
+</span><span class="tag">&lt;p&gt;&lt;label&gt;&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"pks"</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">必选</span><span class="tag">&lt;/label&gt;&lt;/p&gt;</span></code></pre>
+
+<p style="cursor:pointer;" class="action-get" data-href="lib/artDialog-5.0.4/index.html" data-id="12" data-confirm-require="[name=pks1]:checked" data-confirm-require-message="必须选中复选框" data-confirm="您确认要跳转过去吗？\n跳转后请仔细查看浏览器的地址栏；\n按后退返回此页！">单击此处跳转到 ./lib/artDialog-5.0.4/index.html</p>
+
+<p><label><input name="pks1" type="checkbox">必选</label></p><div class="se-section-delimiter"></div>
+
+<h2 id="模拟表单提交post">模拟表单提交（POST）</h2>
+
+<p>将任意元素变成表单的提交按钮。</p>
+
+<h3 id="约定-5">约定</h3>
+
+<p>所有符合<code>class="action-post"</code>的元素被点击时会提交<code>POST</code>请求。 请求地址为<code>data-href</code>属性值。该元素所有以<code>data-</code>开头的属性都会作为参数提交。</p>
+
+<p>当该元素具有<code>data-confirm-require</code>属性时，跳转前会执行<em>先决条件</em>检查。<code>data-confirm-require</code>属性值为一个<code>jQuery 选择器</code>,该选择器创建的<code>jQuery</code>对象不存在时，会提示（<code>window.alert()</code>）条件未满足。可以为该元素添加<code>data-confirm-require-message</code>属性指定提示信息。</p>
+
+<p>当该元素具有<code>data-confirm</code>属性时，跳转前会弹出确认框（<code>window.confirm</code>）。<code>data-confirm</code>属性值可接受的类型为<code>boolean</code>或<code>string</code>（表示确认框文本信息）。</p>
+
+<ul>
+<li><p>若元素具有<code>data-form</code>属性，则该属性值（<code>jQuery 选择器</code>）表示的表单元素即为提交请求的代理表单。修改代理表单<code>method=POST</code>,<code>action=请求地址</code>，然后提交代理表单。</p></li>
+<li><p>否则，若当前元素在某一表单内部，则直接修改该表单<code>method=POST</code>,<code>action=请求地址</code>，然后提交表单。</p></li>
+<li><p>否则，创建一个临时表单提交。</p></li>
+</ul>
+
+<h3 id="示例-4">示例</h3>
+
+<pre style="" class="prettyprint prettyprinted"><code><span class="tag">&lt;button</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"button"</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"btn btn-info action-post"</span><span class="pln">
+        </span><span class="atn">data-form</span><span class="pun">=</span><span class="atv">"#test-post-form"</span><span class="pln">
+        </span><span class="atn">data-href</span><span class="pun">=</span><span class="atv">"lib/artDialog-5.0.4/index.html"</span><span class="pln">
+        </span><span class="atn">data-id</span><span class="pun">=</span><span class="atv">"12"</span><span class="pln">
+        </span><span class="atn">data-confirm-require</span><span class="pun">=</span><span class="atv">"[name=pks2]:checked"</span><span class="pln"> </span><span class="atn">data-confirm-require-message</span><span class="pun">=</span><span class="atv">"必须选中复选框"</span><span class="pln">
+        </span><span class="atn">data-confirm</span><span class="pun">=</span><span class="atv">"您确认要跳转过去吗？\n跳转后请按F5刷新下页面看看是否确实是post提交；\n按后退返回此页！"</span><span class="tag">&gt;</span><span class="pln">
+    post 请求到 ./lib/artDialog-5.0.4/index.html
+</span><span class="tag">&lt;/button&gt;</span><span class="pln">
+</span><span class="tag">&lt;form</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"test-post-form"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;label&gt;&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"pks2"</span><span class="pln"> </span><span class="atn">value</span><span class="pun">=</span><span class="atv">"选中了pks"</span><span class="tag">/&gt;</span><span class="pln">必选</span><span class="tag">&lt;/label&gt;</span><span class="pln">
+</span><span class="tag">&lt;/form&gt;</span></code></pre>
+
+<p><button type="button" class="btn btn-info action-post" data-form="#test-post-form" data-href="lib/artDialog-5.0.4/index.html" data-id="12" data-confirm-require="[name=pks]:checked" data-confirm-require-message="必须选中复选框" data-confirm="您确认要跳转过去吗？\n跳转后请按F5刷新下页面看看是否确实是post提交；\n按后退返回此页！">post 请求到 ./lib/artDialog-5.0.4/index.html</button></p>
+
+<form id="test-post-form">
+    <label><input name="pks" value="选中了pks" type="checkbox">必选</label>
+</form><div class="se-section-delimiter"></div>
+
+<h2 id="模态窗口">模态窗口</h2>
+
+<p>在任意元素上绑定弹出窗口. 该弹出窗口使用<code>ajax</code>加载内容。</p>
+
+<h3 id="依赖">依赖</h3>
+
+<p><code>$.dialog</code>，参见 <a href="http://aui.github.io/artDialog/">artDialog</a>.</p>
+
+<h3 id="约定-6">约定</h3>
+
+<p>符合<code>class="dialog"</code> 的元素会绑定弹出窗口。该元素称为<strong>触发按钮</strong>,<strong>触发按钮</strong>被点击时，弹出一个模态窗口并<code>ajax</code>载入一段内容。<code>ajax</code>请求地址为<code>data-url</code>属性值，请求参数包括所有<code>data-</code>开头的属性。</p>
+
+<p><strong><code>ajax</code>请求的内容必须是一部分<code>html</code>代码，不能包含<code>&lt;html&gt; &lt;head&gt; &lt;body&gt;</code>等标签。</strong></p>
+
+<p>弹出的窗口默认有<code>保存</code>和<code>取消</code>两个按钮，其文字可以分别用<code>data-ok-value</code>和<code>data-cancel-value</code>来定义。<strong>触发按钮包含属性<code>data-readonly=true</code>属性时，不显示<code>保存</code>按钮。</strong></p>
+
+<p><code>保存</code>按钮的行为定义： <br>
+在<code>ajax</code>载入的窗口内容中找到<code>form</code>元素，其内部的<code>button[type=submit]</code>按钮执行点击动作。</p><div class="se-section-delimiter"></div>
+
+<h3 id="属性">属性</h3>
+
+<table>
+<thead>
+<tr>
+  <th>名称</th>
+  <th>类型</th>
+  <th>说明</th>
+  <th>默认</th>
+</tr>
+</thead>
+<tbody><tr>
+  <td><code>data-readonly</code></td>
+  <td><code>boolean</code></td>
+  <td>该值为<code>true</code>时，不显示保存按钮</td>
+  <td><code>false</code></td>
+</tr>
+<tr>
+  <td><code>data-url</code></td>
+  <td><code>url</code></td>
+  <td>窗口内容的<code>ajax</code>请求地址</td>
+  <td><strong>必填、必须有效、必须返回html片段</strong></td>
+</tr>
+<tr>
+  <td><code>data-dialog-url</code></td>
+  <td><code>url</code></td>
+  <td>窗口内容中有<code>form</code>元素且<code>form</code>无<code>action</code>属性时有效，表示<code>保存</code>按钮点击后，表单的提交地址。若<code>form</code>元素无<code>action</code>属性，且属性未配置，则使用<code>data-url</code>代替。</td>
+  <td><code>undefined</code></td>
+</tr>
+<tr>
+  <td><code>data-title</code></td>
+  <td><code>String</code></td>
+  <td>窗口标题</td>
+  <td><code></code></td>
+</tr>
+<tr>
+  <td><code>data-ok-value</code></td>
+  <td><code>String</code></td>
+  <td>保存按钮的文字</td>
+  <td><code>保存</code></td>
+</tr>
+<tr>
+  <td><code>data-cancel-value</code></td>
+  <td><code>String</code></td>
+  <td>取消按钮的文字</td>
+  <td><code>取消</code></td>
+</tr>
+<tr>
+  <td><code>data-width</code></td>
+  <td><code>int</code>或<code>String</code></td>
+  <td>窗口宽度,<code>400</code>、<code>400px</code>或<code>10em</code></td>
+  <td>自适应</td>
+</tr>
+<tr>
+  <td><code>data-height</code></td>
+  <td><code>int</code>或<code>String</code></td>
+  <td>窗口高度,<code>600</code>、<code>600px</code>或<code>20em</code></td>
+  <td>自适应</td>
+</tr>
+<tr>
+  <td><code>data-*</code></td>
+  <td><code>String</code></td>
+  <td>任意自定义参数，会附加到<code>ajax</code>请求上</td>
+  <td></td>
+</tr>
+</tbody></table>
+
+
+<blockquote>
+  <p>更多<code>artDialog</code>参数请参照<a href="http://aui.github.io/artDialog/doc/index.html#option">artDialog 选项</a></p>
+</blockquote>
+
+<h3 id="事件">事件</h3>
+
+<p><code>nojs-dialog-remote-ready</code></p>
+
+<p><code>ajax</code>载入内容成功后触发。</p>
+
+<pre style="" class="prettyprint prettyprinted"><code><span class="kwd">function</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">event</span><span class="pun">,</span><span class="pln">context</span><span class="pun">){}</span></code></pre>
+
+<ul>
+<li><code>event</code>为<code>jQuery</code>事件参数</li>
+<li><code>context</code> 一些有用的上下文对象 <br>
+<ul><li><code>context.module</code> : 本模块对象</li>
+<li><code>context.dialog</code> : <code>artDialog</code>对象</li>
+<li><code>context.$content</code>: 窗口内容.由<code>ajax</code>载入的<code>dom jQuery</code>封装</li>
+<li><code>context.$form</code>  : 窗口内的表单<code>jQuery</code>封装. 若不包含表单，该<code>jQuery</code>长度为<code>0</code>.</li></ul></li>
+</ul>
+
+<h3 id="示例-5">示例</h3>
+
+<pre style="" class="prettyprint prettyprinted"><code><span class="tag">&lt;button</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"button"</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"btn btn-info dialog"</span><span class="pln">
+        </span><span class="atn">data-url</span><span class="pun">=</span><span class="atv">"input.html"</span><span class="pln">
+        </span><span class="atn">data-title</span><span class="pun">=</span><span class="atv">"弹出窗口"</span><span class="pln">
+        </span><span class="atn">data-id</span><span class="pun">=</span><span class="atv">"12"</span><span class="pln">
+        </span><span class="atn">data-readonly</span><span class="pun">=</span><span class="atv">"true"</span><span class="tag">&gt;</span><span class="pln">
+    弹出窗口
+</span><span class="tag">&lt;/button&gt;</span></code></pre>
+
+<p><button type="button" class="btn btn-info dialog" data-url="input.html" data-title="弹出窗口" data-id="12" data-readonly="true"> <br>
+    弹出窗口 <br>
+</button></p><div class="se-section-delimiter"></div>
+
+<h2 id="表单验证">表单验证</h2>
+
+<p>使用<code>html5</code>语法对表单自动验证。</p>
+
+<h3 id="依赖-1">依赖</h3>
+
+<p><code>$.fn.validate</code>，参见 <a href="http://jqueryvalidation.org/documentation/">jqueryvalidation</a>.</p>
+
+<h3 id="约定-7">约定</h3>
+
+<p>符合<code>class="validate"</code>的表单会使用<code>jQuery Validation 插件</code>进行验证。具体的验证规则由<code>jQuery Validation</code>定义。</p>
+
+<p>使用<code>data-rule-*</code>来声明验证规则，<code>data-message-*</code>声明错误信息（可选）。</p>
+
+<h3 id="示例-6">示例</h3>
+
+<pre style="" class="prettyprint prettyprinted"><code><span class="tag">&lt;form</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"signInForm"</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"validate"</span><span class="pln"> </span><span class="atn">method</span><span class="pun">=</span><span class="atv">"post"</span><span class="pln"> </span><span class="atn">role</span><span class="pun">=</span><span class="atv">"form"</span><span class="pln"> </span><span class="atn">action</span><span class="pun">=</span><span class="atv">"../authc/signIn"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"form-group"</span><span class="tag">&gt;</span><span class="pln">
+        </span><span class="tag">&lt;input</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"form-control"</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"email"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"email"</span><span class="pln"> </span><span class="atn">placeholder</span><span class="pun">=</span><span class="atv">"电子邮箱"</span><span class="pln">
+               </span><span class="atn">data-rule-required</span><span class="pun">=</span><span class="atv">"true"</span><span class="pln">
+               </span><span class="atn">data-msg-required</span><span class="pun">=</span><span class="atv">"请输入您的电子邮箱"</span><span class="pln">
+               </span><span class="atn">data-rule-email</span><span class="pun">=</span><span class="atv">"true"</span><span class="pln">
+               </span><span class="atn">data-msg-email</span><span class="pun">=</span><span class="atv">"请输入格式正确的电子邮箱"</span><span class="pln">
+               </span><span class="atn">data-rule-maxlength</span><span class="pun">=</span><span class="atv">"60"</span><span class="pln">
+               </span><span class="atn">data-rule-remote</span><span class="pun">=</span><span class="atv">"js/validate-email.json"</span><span class="pln">
+               </span><span class="atn">data-msg-remote</span><span class="pun">=</span><span class="atv">"该邮箱尚未注册"</span><span class="tag">/&gt;</span><span class="pln">
+        </span><span class="tag">&lt;span</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"icon-email"</span><span class="tag">&gt;&lt;/span&gt;</span><span class="pln">
+    </span><span class="tag">&lt;/div&gt;</span><span class="pln">
+    </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"form-group"</span><span class="tag">&gt;</span><span class="pln">
+        </span><span class="tag">&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"password"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"password"</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"form-control"</span><span class="pln"> </span><span class="atn">placeholder</span><span class="pun">=</span><span class="atv">"密码"</span><span class="pln">
+               </span><span class="atn">data-rule-required</span><span class="pun">=</span><span class="atv">"true"</span><span class="pln">
+               </span><span class="atn">data-msg-required</span><span class="pun">=</span><span class="atv">"请输入您的登陆密码"</span><span class="pln">
+               </span><span class="atn">data-rule-minlength</span><span class="pun">=</span><span class="atv">"6"</span><span class="pln">
+               </span><span class="atn">data-msg-minlength</span><span class="pun">=</span><span class="atv">"密码位数不得小于六位"</span><span class="tag">/&gt;</span><span class="pln">
+        </span><span class="tag">&lt;span</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"icon-password"</span><span class="tag">&gt;&lt;/span&gt;</span><span class="pln">
+    </span><span class="tag">&lt;/div&gt;</span><span class="pln">
+    </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"form-group action"</span><span class="tag">&gt;</span><span class="pln">
+        </span><span class="tag">&lt;button</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"login-action"</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"submit"</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"btn btn-primary btn-bg"</span><span class="tag">&gt;</span><span class="pln">登录</span><span class="tag">&lt;/button&gt;</span><span class="pln">
+    </span><span class="tag">&lt;/div&gt;</span><span class="pln">
+</span><span class="tag">&lt;/form&gt;</span></code></pre>
+
+<form id="signInForm" class="validate" method="post" role="form" action="../authc/signIn">
+    <div class="form-group">
+        <input class="form-control" name="email" placeholder="电子邮箱" data-rule-required="true" data-msg-required="请输入您的电子邮箱" data-rule-email="true" data-msg-email="请输入格式正确的电子邮箱" data-rule-maxlength="60" data-rule-remote="js/validate-email.json" data-msg-remote="该邮箱尚未注册" type="email">
+        <span class="icon-email"></span>
+    </div>
+    <div class="form-group">
+        <input name="password" class="form-control" placeholder="密码" data-rule-required="true" data-msg-required="请输入您的登陆密码" data-rule-minlength="6" data-msg-minlength="密码位数不得小于六位" type="password">
+        <span class="icon-password"></span>
+    </div>
+    <div class="form-group action">
+        <button id="login-action" type="submit" class="btn btn-primary btn-bg">登录</button>
+    </div>
+</form><div class="se-section-delimiter"></div>
+
+<h3 id="与jquery-form联合使用">与<code>jQuery Form</code>联合使用</h3>
+
+<p><code>jQuery Form 插件</code>用来异步提交表单，验证表单建议使用以下代码模板：</p>
+
+<pre style="" class="prettyprint prettyprinted"><code class="language-javascript"><span class="pln">$</span><span class="pun">(</span><span class="str">"#yourForm"</span><span class="pun">).</span><span class="pln">ajaxForm</span><span class="pun">({</span><span class="pln">
+	cache</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">false</span><span class="pun">,</span><span class="pln">
+	beforeSubmit</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">arr</span><span class="pun">,</span><span class="pln"> $form</span><span class="pun">,</span><span class="pln"> options</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+	    </span><span class="kwd">return</span><span class="pln"> $form</span><span class="pun">.</span><span class="pln">data</span><span class="pun">(</span><span class="str">"validator"</span><span class="pun">).</span><span class="pln">form</span><span class="pun">();</span><span class="com">//在提交前验证表单</span><span class="pln">
+	</span><span class="pun">},</span><span class="pln">
+	success</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">data</span><span class="pun">,</span><span class="pln"> status</span><span class="pun">,</span><span class="pln"> xhr</span><span class="pun">,</span><span class="pln"> $form</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+		</span><span class="com">//do your code.</span><span class="pln">
+	</span><span class="pun">},</span><span class="pln">
+	error</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">xhr</span><span class="pun">,</span><span class="pln"> status</span><span class="pun">,</span><span class="pln"> ex</span><span class="pun">,</span><span class="pln"> $form</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+	    $form</span><span class="pun">.</span><span class="pln">data</span><span class="pun">(</span><span class="str">"validator"</span><span class="pun">).</span><span class="pln">showErrors</span><span class="pun">({</span><span class="str">"name"</span><span class="pun">:</span><span class="pln"> </span><span class="str">"操作失败"</span><span class="pun">});</span><span class="com">//在`name`字段上显示表单验证错误信息。</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<blockquote>
+  <p>更多<code>jQuery Form 插件</code>相关信息参见 <a href="http://jquery.malsup.com/form/">jQuery Form Plugin</a>.</p>
+</blockquote><div class="se-section-delimiter"></div>
+
+<h2 id="nojs-事件">nojs 事件</h2>
+
+<p>注意以下代码不能写在<code>jQuery</code>的<code>ready()</code>方法里。</p>
+
+<h3 id="在模块加载前运行代码">在模块加载前运行代码</h3>
+
+<pre style="" class="prettyprint prettyprinted"><code class="language-javascript"><span class="pln">$nojs</span><span class="pun">.</span><span class="pln">before</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">context</span><span class="pun">){</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">;</span><span class="pln"> </span><span class="com">//表示nojs全局对象，等同于$nojs.</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">alternate</span><span class="pun">.</span><span class="pln">enable</span><span class="pun">=</span><span class="kwd">false</span><span class="pun">;</span><span class="pln">    </span><span class="com">//禁用各行变色模块</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">validation</span><span class="pun">.</span><span class="pln">enable</span><span class="pun">=</span><span class="kwd">false</span><span class="pun">;</span><span class="pln">   </span><span class="com">//禁用自动表单验证模块</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<blockquote>
+  <p>Written with <a href="https://stackedit.io/">StackEdit</a>.</p>
+</blockquote></div></body>
+</html>
