@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Nojs : nojs.js 的理想是`消灭html中的javascript代码`，是`约定代替配置`思想在web前端的尝试。" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Nojs</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/terrason/nojs">View on GitHub</a>
+
+          <h1 id="project_title">Nojs</h1>
+          <h2 id="project_tagline">nojs.js 的理想是`消灭html中的javascript代码`，是`约定代替配置`思想在web前端的尝试。</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/terrason/nojs/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/terrason/nojs/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="-nojsjs-%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3" class="anchor" href="#-nojsjs-%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3"><span class="octicon octicon-link"></span></a> nojs.js 说明文档</h1>
+
+<p>nojs.js 的理想是<code>消灭html中的javascript代码</code>，是<code>约定代替配置</code>思想在web前端的尝试。本文档对<code>nojs</code>的所有约定做详细说明。</p>
+
+<p>[TOC]</p>
+
+<h2>
+<a name="%E5%8F%AF%E4%BC%B8%E7%BC%A9%E5%9D%97" class="anchor" href="#%E5%8F%AF%E4%BC%B8%E7%BC%A9%E5%9D%97"><span class="octicon octicon-link"></span></a>可伸缩块</h2>
+
+<p>可伸缩块包含<code>controller</code> 和 <code>content</code>,点击<code>controller</code>，会展开/折叠<code>content</code>。</p>
+
+<h3>
+<a name="%E7%BA%A6%E5%AE%9A" class="anchor" href="#%E7%BA%A6%E5%AE%9A"><span class="octicon octicon-link"></span></a>约定</h3>
+
+<p>所有<code>class="collapsible"</code>的块都被定义为一个<code>可伸缩快</code>，其内部具有属性<code>for</code>的元素就是<code>controller</code>，<code>for</code>属性值表示<code>content</code>的<code>ID</code>。</p>
+
+<h3>
+<a name="%E7%A4%BA%E4%BE%8B" class="anchor" href="#%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>示例</h3>
+
+<pre><code>&lt;div class="collapsible"&gt;
+    &lt;label for="collapsible1" style="cursor:pointer;"&gt;展开/折叠&lt;/label&gt;
+
+    &lt;div id="collapsible1"&gt;
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&lt;br /&gt;
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&lt;br /&gt;
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&lt;br /&gt;
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&lt;br /&gt;
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&lt;br /&gt;
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&lt;br /&gt;
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&lt;br /&gt;
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&lt;br /&gt;
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&lt;br /&gt;
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&lt;br /&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<div>
+    展开/折叠
+
+    <div>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+</div>
+</div>
+
+<h2>
+<a name="checkbox-%E5%85%A8%E9%80%89%E5%8F%96%E6%B6%88%E8%81%94%E5%8A%A8" class="anchor" href="#checkbox-%E5%85%A8%E9%80%89%E5%8F%96%E6%B6%88%E8%81%94%E5%8A%A8"><span class="octicon octicon-link"></span></a>checkbox 全选/取消联动</h2>
+
+<p><em>leader</em> 型<code>checkbox</code>发生改变时，会联动到 <em>member</em> 型<code>checkbox</code>上，反之亦然。</p>
+
+<h3>
+<a name="%E7%BA%A6%E5%AE%9A-1" class="anchor" href="#%E7%BA%A6%E5%AE%9A-1"><span class="octicon octicon-link"></span></a>约定</h3>
+
+<p>所有包含<code>data-mamber</code> <strong>属性</strong> 的 <code>checkbox</code> 都被定义为 <code>leader</code>. 其<code>data-member</code>属性值表示需要联动的<code>member</code>型<code>checkbox</code>的<code>name</code>属性值。即一个<code>leader</code>只能联动同一<code>name</code>的<code>checkbox</code>，这组<code>name</code>相同的<code>checkbox</code>就是<code>leader</code>的<code>member</code>. <code>name</code>属性值称为 <strong>联动名称</strong>。</p>
+
+<p><code>联动checkbox</code>能绑定<code>button</code>元素，当<code>member</code>没有一个被选中时，绑定的<code>button</code>会被设置成<code>disabled</code>状态。</p>
+
+<p>要完成<code>button</code>绑定只需给<code>button</code>元素添加<code>data-checkbox-require="$name"</code>属性，其中<code>$name</code>表示<strong>联动名称</strong></p>
+
+<h3>
+<a name="%E7%A4%BA%E4%BE%8B-1" class="anchor" href="#%E7%A4%BA%E4%BE%8B-1"><span class="octicon octicon-link"></span></a>示例</h3>
+
+<pre><code>&lt;label&gt;&lt;input type="checkbox" data-member="pks"/&gt; 全选&lt;/label&gt;
+&lt;label&gt;&lt;input type="checkbox" name="pks"/&gt;选项1&lt;/label&gt;
+&lt;label&gt;&lt;input type="checkbox" name="pks"/&gt;选项2&lt;/label&gt;
+&lt;label&gt;&lt;input type="checkbox" name="pks"/&gt;选项3&lt;/label&gt;
+&lt;label&gt;&lt;input type="checkbox" name="pks"/&gt;选项4&lt;/label&gt;
+&lt;label&gt;&lt;input type="checkbox" name="pks"/&gt;选项5&lt;/label&gt;
+&lt;div&gt;
+    &lt;button class="btn btn-info" type="button" data-checkbox-require="pks"&gt;删除&lt;/button&gt;
+&lt;/div&gt;
+</code></pre>
+
+<div>
+     全选
+    选项1
+    选项2
+    选项3
+    选项4
+    选项5
+    <div>
+        删除
+    </div>
+</div>
+
+<h2>
+<a name="select-%E5%80%BC%E7%BB%91%E5%AE%9A" class="anchor" href="#select-%E5%80%BC%E7%BB%91%E5%AE%9A"><span class="octicon octicon-link"></span></a>select 值绑定</h2>
+
+<p>给<code>select</code>加上<code>data-value</code>属性，该属性值对应的<code>option</code>即被选中。</p>
+
+<h3>
+<a name="%E7%BA%A6%E5%AE%9A-2" class="anchor" href="#%E7%BA%A6%E5%AE%9A-2"><span class="octicon octicon-link"></span></a>约定</h3>
+
+<p><code>select</code>的<code>data-value</code>属性值，即为该<code>select</code>的值，自动选中<code>value</code>等于该值的<code>option</code>。</p>
+
+<h3>
+<a name="%E7%A4%BA%E4%BE%8B-2" class="anchor" href="#%E7%A4%BA%E4%BE%8B-2"><span class="octicon octicon-link"></span></a>示例</h3>
+
+<pre><code>&lt;select data-value="5"&gt;
+    &lt;option&gt;--未选择--&lt;/option&gt;
+    &lt;option value="1"&gt;选项1&lt;/option&gt;
+    &lt;option value="2"&gt;选项2&lt;/option&gt;
+    &lt;option value="3"&gt;选项3&lt;/option&gt;
+    &lt;option value="4"&gt;选项4&lt;/option&gt;
+    &lt;option value="5"&gt;选项5&lt;/option&gt;
+    &lt;option value="6"&gt;选项6&lt;/option&gt;
+&lt;/select&gt;
+</code></pre>
+
+<p>--未选择--选项1选项2选项3选项4选项5选项6</p>
+
+<h2>
+<a name="trim" class="anchor" href="#trim"><span class="octicon octicon-link"></span></a>trim</h2>
+
+<p>文本框文本自动去除首尾空格.</p>
+
+<h3>
+<a name="%E7%BA%A6%E5%AE%9A-3" class="anchor" href="#%E7%BA%A6%E5%AE%9A-3"><span class="octicon octicon-link"></span></a>约定</h3>
+
+<p>所有文本框（<code>input[type=text]</code>）在发生变化时，自动移除首尾空格。 除非该文本框拥有<code>data-skip-trim</code>属性.</p>
+
+<h2>
+<a name="%E6%9F%A5%E8%AF%A2%E8%A1%A8%E5%8D%95%E9%87%8D%E7%BD%AE" class="anchor" href="#%E6%9F%A5%E8%AF%A2%E8%A1%A8%E5%8D%95%E9%87%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>查询表单重置</h2>
+
+<p>与普通的表单重置按钮不同，<code>查询表单</code>的<code>重置</code>需要清空所有查询条件，并立即提交查询表单。</p>
+
+<h3>
+<a name="%E7%BA%A6%E5%AE%9A-4" class="anchor" href="#%E7%BA%A6%E5%AE%9A-4"><span class="octicon octicon-link"></span></a>约定</h3>
+
+<p>约定<code>&lt;form class="lookup"&gt;</code>为查询表单，其内部拥有<code>class="reset"</code>的元素即为重置按钮，该按钮被点击后会清空查询表单的所有查询条件输入，并提交表单。</p>
+
+<h2>
+<a name="%E6%A8%A1%E6%8B%9F%E8%B6%85%E9%93%BE%E6%8E%A5get" class="anchor" href="#%E6%A8%A1%E6%8B%9F%E8%B6%85%E9%93%BE%E6%8E%A5get"><span class="octicon octicon-link"></span></a>模拟超链接（GET）</h2>
+
+<p>将任意元素变成<code>&lt;a&gt;</code>标签，点击该元素会自动跳转。</p>
+
+<h3>
+<a name="%E7%BA%A6%E5%AE%9A-5" class="anchor" href="#%E7%BA%A6%E5%AE%9A-5"><span class="octicon octicon-link"></span></a>约定</h3>
+
+<p>所有符合<code>class="action-get"</code>的元素被点击时会执行跳转，跳转地址为<code>data-href</code>属性值。该元素所有以<code>data-</code>开头的属性都会附加到URL的参数上。</p>
+
+<p>当该元素具有<code>data-confirm-require</code>属性时，跳转前会执行<em>先决条件</em>检查。<code>data-confirm-require</code>属性值为一个<code>jQuery 选择器</code>,该选择器创建的<code>jQuery</code>对象不存在时，会提示（<code>window.alert()</code>）条件未满足。可以为该元素添加<code>data-confirm-require-message</code>属性指定提示信息。</p>
+
+<p>当该元素具有<code>data-confirm</code>属性时，跳转前会弹出确认框（<code>window.confirm</code>）。<code>data-confirm</code>属性值可接受的类型为<code>boolean</code>或<code>string</code>（表示确认框文本信息）。</p>
+
+<h3>
+<a name="%E7%A4%BA%E4%BE%8B-3" class="anchor" href="#%E7%A4%BA%E4%BE%8B-3"><span class="octicon octicon-link"></span></a>示例</h3>
+
+<pre><code>&lt;p class="action-get"
+   data-href="lib/artDialog-5.0.4/index.html"
+   data-id="12"
+   data-confirm-require="[name=pks]:checked"
+   data-confirm-require-message="必须选中复选框"
+   data-confirm="您确认要跳转过去吗？\n跳转后请仔细查看浏览器的地址栏；\n按后退返回此页！"
+   style="cursor:pointer;" &gt;
+    单击此处跳转到 ./lib/artDialog-5.0.4/index.html
+&lt;/p&gt;
+&lt;p&gt;&lt;label&gt;&lt;input type="checkbox" name="pks" /&gt;必选&lt;/label&gt;&lt;/p&gt;
+</code></pre>
+
+<p>单击此处跳转到 ./lib/artDialog-5.0.4/index.html</p>
+
+<p>必选</p>
+
+<h2>
+<a name="%E6%A8%A1%E6%8B%9F%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4post" class="anchor" href="#%E6%A8%A1%E6%8B%9F%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4post"><span class="octicon octicon-link"></span></a>模拟表单提交（POST）</h2>
+
+<p>将任意元素变成表单的提交按钮。</p>
+
+<h3>
+<a name="%E7%BA%A6%E5%AE%9A-6" class="anchor" href="#%E7%BA%A6%E5%AE%9A-6"><span class="octicon octicon-link"></span></a>约定</h3>
+
+<p>所有符合<code>class="action-post"</code>的元素被点击时会提交<code>POST</code>请求。 请求地址为<code>data-href</code>属性值。该元素所有以<code>data-</code>开头的属性都会作为参数提交。</p>
+
+<p>当该元素具有<code>data-confirm-require</code>属性时，跳转前会执行<em>先决条件</em>检查。<code>data-confirm-require</code>属性值为一个<code>jQuery 选择器</code>,该选择器创建的<code>jQuery</code>对象不存在时，会提示（<code>window.alert()</code>）条件未满足。可以为该元素添加<code>data-confirm-require-message</code>属性指定提示信息。</p>
+
+<p>当该元素具有<code>data-confirm</code>属性时，跳转前会弹出确认框（<code>window.confirm</code>）。<code>data-confirm</code>属性值可接受的类型为<code>boolean</code>或<code>string</code>（表示确认框文本信息）。</p>
+
+<ul>
+<li><p>若元素具有<code>data-form</code>属性，则该属性值（<code>jQuery 选择器</code>）表示的表单元素即为提交请求的代理表单。修改代理表单<code>method=POST</code>,<code>action=请求地址</code>，然后提交代理表单。</p></li>
+<li><p>否则，若当前元素在某一表单内部，则直接修改该表单<code>method=POST</code>,<code>action=请求地址</code>，然后提交表单。</p></li>
+<li><p>否则，创建一个临时表单提交。</p></li>
+</ul><h3>
+<a name="%E7%A4%BA%E4%BE%8B-4" class="anchor" href="#%E7%A4%BA%E4%BE%8B-4"><span class="octicon octicon-link"></span></a>示例</h3>
+
+<pre><code>&lt;button type="button" class="btn btn-info action-post"
+        data-form="#test-post-form"
+        data-href="lib/artDialog-5.0.4/index.html"
+        data-id="12"
+        data-confirm-require="[name=pks2]:checked" data-confirm-require-message="必须选中复选框"
+        data-confirm="您确认要跳转过去吗？\n跳转后请按F5刷新下页面看看是否确实是post提交；\n按后退返回此页！"&gt;
+    post 请求到 ./lib/artDialog-5.0.4/index.html
+&lt;/button&gt;
+&lt;form id="test-post-form"&gt;
+    &lt;label&gt;&lt;input type="checkbox" name="pks2" value="选中了pks"/&gt;必选&lt;/label&gt;
+&lt;/form&gt;
+</code></pre>
+
+<p>post 请求到 ./lib/artDialog-5.0.4/index.html</p>
+
+
+    必选
+
+
+<h2>
+<a name="%E6%A8%A1%E6%80%81%E7%AA%97%E5%8F%A3" class="anchor" href="#%E6%A8%A1%E6%80%81%E7%AA%97%E5%8F%A3"><span class="octicon octicon-link"></span></a>模态窗口</h2>
+
+<p>在任意元素上绑定弹出窗口. 该弹出窗口使用<code>ajax</code>加载内容。</p>
+
+<h3>
+<a name="%E4%BE%9D%E8%B5%96" class="anchor" href="#%E4%BE%9D%E8%B5%96"><span class="octicon octicon-link"></span></a>依赖</h3>
+
+<p><code>$.dialog</code>，参见 <a href="http://aui.github.io/artDialog/">artDialog</a>.</p>
+
+<h3>
+<a name="%E7%BA%A6%E5%AE%9A-7" class="anchor" href="#%E7%BA%A6%E5%AE%9A-7"><span class="octicon octicon-link"></span></a>约定</h3>
+
+<p>符合<code>class="dialog"</code> 的元素会绑定弹出窗口。该元素称为<strong>触发按钮</strong>,<strong>触发按钮</strong>被点击时，弹出一个模态窗口并<code>ajax</code>载入一段内容。<code>ajax</code>请求地址为<code>data-url</code>属性值，请求参数包括所有<code>data-</code>开头的属性。</p>
+
+<p><strong><code>ajax</code>请求的内容必须是一部分<code>html</code>代码，不能包含<code>&lt;html&gt; &lt;head&gt; &lt;body&gt;</code>等标签。</strong></p>
+
+<p>弹出的窗口默认有<code>保存</code>和<code>取消</code>两个按钮，其文字可以分别用<code>data-ok-value</code>和<code>data-cancel-value</code>来定义。<strong>触发按钮包含属性<code>data-readonly=true</code>属性时，不显示<code>保存</code>按钮。</strong></p>
+
+<p><code>保存</code>按钮的行为定义：
+在<code>ajax</code>载入的窗口内容中找到<code>form</code>元素，其内部的<code>button[type=submit]</code>按钮执行点击动作。</p>
+
+<h3>
+<a name="%E5%B1%9E%E6%80%A7" class="anchor" href="#%E5%B1%9E%E6%80%A7"><span class="octicon octicon-link"></span></a>属性</h3>
+
+<table>
+<thead><tr>
+<th>名称</th>
+<th>类型</th>
+<th>说明</th>
+<th>默认</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>data-readonly</code></td>
+<td><code>boolean</code></td>
+<td>该值为<code>true</code>时，不显示保存按钮</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>data-url</code></td>
+<td><code>url</code></td>
+<td>窗口内容的<code>ajax</code>请求地址</td>
+<td><strong>必填、必须有效、必须返回html片段</strong></td>
+</tr>
+<tr>
+<td><code>data-dialog-url</code></td>
+<td><code>url</code></td>
+<td>窗口内容中有<code>form</code>元素且<code>form</code>无<code>action</code>属性时有效，表示<code>保存</code>按钮点击后，表单的提交地址。若<code>form</code>元素无<code>action</code>属性，且属性未配置，则使用<code>data-url</code>代替。</td>
+<td><code>undefined</code></td>
+</tr>
+<tr>
+<td><code>data-title</code></td>
+<td><code>String</code></td>
+<td>窗口标题</td>
+<td><code></code></td>
+</tr>
+<tr>
+<td><code>data-ok-value</code></td>
+<td><code>String</code></td>
+<td>保存按钮的文字</td>
+<td><code>保存</code></td>
+</tr>
+<tr>
+<td><code>data-cancel-value</code></td>
+<td><code>String</code></td>
+<td>取消按钮的文字</td>
+<td><code>取消</code></td>
+</tr>
+<tr>
+<td><code>data-width</code></td>
+<td>
+<code>int</code>或<code>String</code>
+</td>
+<td>窗口宽度,<code>400</code>、<code>400px</code>或<code>10em</code>
+</td>
+<td>自适应</td>
+</tr>
+<tr>
+<td><code>data-height</code></td>
+<td>
+<code>int</code>或<code>String</code>
+</td>
+<td>窗口高度,<code>600</code>、<code>600px</code>或<code>20em</code>
+</td>
+<td>自适应</td>
+</tr>
+<tr>
+<td><code>data-*</code></td>
+<td><code>String</code></td>
+<td>任意自定义参数，会附加到<code>ajax</code>请求上</td>
+<td></td>
+</tr>
+</tbody>
+</table><blockquote>
+<p>更多<code>artDialog</code>参数请参照<a href="http://aui.github.io/artDialog/doc/index.html#option">artDialog 选项</a></p>
+</blockquote>
+
+<h3>
+<a name="%E4%BA%8B%E4%BB%B6" class="anchor" href="#%E4%BA%8B%E4%BB%B6"><span class="octicon octicon-link"></span></a>事件</h3>
+
+<p><code>nojs-dialog-remote-ready</code></p>
+
+<p><code>ajax</code>载入内容成功后触发。</p>
+
+<pre><code>function (event,context){}
+</code></pre>
+
+<ul>
+<li>
+<code>event</code>为<code>jQuery</code>事件参数</li>
+<li>
+<code>context</code> 一些有用的上下文对象
+
+<ul>
+<li>
+<code>context.module</code> : 本模块对象</li>
+<li>
+<code>context.dialog</code> : <code>artDialog</code>对象</li>
+<li>
+<code>context.$content</code>: 窗口内容.由<code>ajax</code>载入的<code>dom jQuery</code>封装</li>
+<li>
+<code>context.$form</code>  : 窗口内的表单<code>jQuery</code>封装. 若不包含表单，该<code>jQuery</code>长度为<code>0</code>.</li>
+</ul>
+</li>
+</ul><h3>
+<a name="%E7%A4%BA%E4%BE%8B-5" class="anchor" href="#%E7%A4%BA%E4%BE%8B-5"><span class="octicon octicon-link"></span></a>示例</h3>
+
+<pre><code>&lt;button type="button" class="btn btn-info dialog"
+        data-url="input.html"
+        data-title="弹出窗口"
+        data-id="12"
+        data-readonly="true"&gt;
+    弹出窗口
+&lt;/button&gt;
+</code></pre>
+
+<p>
+    弹出窗口
+</p>
+
+<h2>
+<a name="%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81" class="anchor" href="#%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81"><span class="octicon octicon-link"></span></a>表单验证</h2>
+
+<p>使用<code>html5</code>语法对表单自动验证。</p>
+
+<h3>
+<a name="%E4%BE%9D%E8%B5%96-1" class="anchor" href="#%E4%BE%9D%E8%B5%96-1"><span class="octicon octicon-link"></span></a>依赖</h3>
+
+<p><code>$.fn.validate</code>，参见 <a href="http://jqueryvalidation.org/documentation/">jqueryvalidation</a>.</p>
+
+<h3>
+<a name="%E7%BA%A6%E5%AE%9A-8" class="anchor" href="#%E7%BA%A6%E5%AE%9A-8"><span class="octicon octicon-link"></span></a>约定</h3>
+
+<p>符合<code>class="validate"</code>的表单会使用<code>jQuery Validation 插件</code>进行验证。具体的验证规则由<code>jQuery Validation</code>定义。</p>
+
+<p>使用<code>data-rule-*</code>来声明验证规则，<code>data-message-*</code>声明错误信息（可选）。</p>
+
+<h3>
+<a name="%E7%A4%BA%E4%BE%8B-6" class="anchor" href="#%E7%A4%BA%E4%BE%8B-6"><span class="octicon octicon-link"></span></a>示例</h3>
+
+<pre><code>&lt;form id="signInForm" class="validate" method="post" role="form" action="../authc/signIn"&gt;
+    &lt;div class="form-group"&gt;
+        &lt;input class="form-control" type="email" name="email" placeholder="电子邮箱"
+               data-rule-required="true"
+               data-msg-required="请输入您的电子邮箱"
+               data-rule-email="true"
+               data-msg-email="请输入格式正确的电子邮箱"
+               data-rule-maxlength="60"
+               data-rule-remote="js/validate-email.json"
+               data-msg-remote="该邮箱尚未注册"/&gt;
+        &lt;span class="icon-email"&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="form-group"&gt;
+        &lt;input type="password" name="password" class="form-control" placeholder="密码"
+               data-rule-required="true"
+               data-msg-required="请输入您的登陆密码"
+               data-rule-minlength="6"
+               data-msg-minlength="密码位数不得小于六位"/&gt;
+        &lt;span class="icon-password"&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="form-group action"&gt;
+        &lt;button id="login-action" type="submit" class="btn btn-primary btn-bg"&gt;登录&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/form&gt;
+</code></pre>
+
+
+    <div>
+        
+    </div>
+    <div>
+        
+    </div>
+    <div>
+        登录
+    </div>
+
+
+<h3>
+<a name="%E4%B8%8Ejquery-form%E8%81%94%E5%90%88%E4%BD%BF%E7%94%A8" class="anchor" href="#%E4%B8%8Ejquery-form%E8%81%94%E5%90%88%E4%BD%BF%E7%94%A8"><span class="octicon octicon-link"></span></a>与<code>jQuery Form</code>联合使用</h3>
+
+<p><code>jQuery Form 插件</code>用来异步提交表单，验证表单建议使用以下代码模板：</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">$</span><span class="p">(</span><span class="s2">"#yourForm"</span><span class="p">).</span><span class="nx">ajaxForm</span><span class="p">({</span>
+    <span class="nx">cache</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">beforeSubmit</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">$form</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">$form</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">"validator"</span><span class="p">).</span><span class="nx">form</span><span class="p">();</span><span class="c1">//在提交前验证表单</span>
+    <span class="p">},</span>
+    <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">xhr</span><span class="p">,</span> <span class="nx">$form</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//do your code.</span>
+    <span class="p">},</span>
+    <span class="nx">error</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">xhr</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">ex</span><span class="p">,</span> <span class="nx">$form</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">$form</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">"validator"</span><span class="p">).</span><span class="nx">showErrors</span><span class="p">({</span><span class="s2">"name"</span><span class="o">:</span> <span class="s2">"操作失败"</span><span class="p">});</span><span class="c1">//在`name`字段上显示表单验证错误信息。</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<blockquote>
+<p>更多<code>jQuery Form 插件</code>相关信息参见 <a href="http://jquery.malsup.com/form/">jQuery Form Plugin</a>.</p>
+</blockquote>
+
+<h2>
+<a name="nojs-%E4%BA%8B%E4%BB%B6" class="anchor" href="#nojs-%E4%BA%8B%E4%BB%B6"><span class="octicon octicon-link"></span></a>nojs 事件</h2>
+
+<p>注意以下代码不能写在<code>jQuery</code>的<code>ready()</code>方法里。</p>
+
+<h3>
+<a name="%E5%9C%A8%E6%A8%A1%E5%9D%97%E5%8A%A0%E8%BD%BD%E5%89%8D%E8%BF%90%E8%A1%8C%E4%BB%A3%E7%A0%81" class="anchor" href="#%E5%9C%A8%E6%A8%A1%E5%9D%97%E5%8A%A0%E8%BD%BD%E5%89%8D%E8%BF%90%E8%A1%8C%E4%BB%A3%E7%A0%81"><span class="octicon octicon-link"></span></a>在模块加载前运行代码</h3>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">$nojs</span><span class="p">.</span><span class="nx">before</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">context</span><span class="p">){</span>
+    <span class="k">this</span><span class="p">;</span> <span class="c1">//表示nojs全局对象，等同于$nojs.</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">alternate</span><span class="p">.</span><span class="nx">enable</span><span class="o">=</span><span class="kc">false</span><span class="p">;</span>    <span class="c1">//禁用各行变色模块</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">validation</span><span class="p">.</span><span class="nx">enable</span><span class="o">=</span><span class="kc">false</span><span class="p">;</span>   <span class="c1">//禁用自动表单验证模块</span>
+<span class="p">});</span>
+</pre></div>
+
+<blockquote>
+<p>Written with <a href="https://stackedit.io/">StackEdit</a>.</p>
+</blockquote>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Nojs maintained by <a href="https://github.com/terrason">terrason</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
