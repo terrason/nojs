@@ -77,10 +77,10 @@
 &lt;/div&gt;
 </code></pre>
 
-<div>
-    展开/折叠
+<div class="collapsible">
+    <label for="collapsible1" style="cursor:pointer;">展开/折叠</label>
 
-    <div>
+    <div id="collapsible1">
         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
@@ -91,7 +91,7 @@
         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
-</div>
+    </div>
 </div>
 
 <h2>
@@ -122,15 +122,15 @@
 &lt;/div&gt;
 </code></pre>
 
-<div>
-     全选
-    选项1
-    选项2
-    选项3
-    选项4
-    选项5
+<div class="demo">
+    <label><input data-member="pks" type="checkbox"> 全选</label>
+    <label><input name="pks" type="checkbox">选项1</label>
+    <label><input name="pks" type="checkbox">选项2</label>
+    <label><input name="pks" type="checkbox">选项3</label>
+    <label><input name="pks" type="checkbox">选项4</label>
+    <label><input name="pks" type="checkbox">选项5</label>
     <div>
-        删除
+        <button class="btn btn-info" type="button" data-checkbox-require="pks">删除</button>
     </div>
 </div>
 
@@ -158,7 +158,15 @@
 &lt;/select&gt;
 </code></pre>
 
-<p>--未选择--选项1选项2选项3选项4选项5选项6</p>
+<p><select data-value="5"> 
+    <option>–未选择–</option> 
+    <option value="1">选项1</option> 
+    <option value="2">选项2</option> 
+    <option value="3">选项3</option> 
+    <option value="4">选项4</option> 
+    <option value="5">选项5</option> 
+    <option value="6">选项6</option> 
+</select></p>
 
 <h2>
 <a name="trim" class="anchor" href="#trim"><span class="octicon octicon-link"></span></a>trim</h2>
@@ -209,9 +217,9 @@
 &lt;p&gt;&lt;label&gt;&lt;input type="checkbox" name="pks" /&gt;必选&lt;/label&gt;&lt;/p&gt;
 </code></pre>
 
-<p>单击此处跳转到 ./lib/artDialog-5.0.4/index.html</p>
+<p style="cursor:pointer;" class="action-get" data-href="lib/artDialog-5.0.4/index.html" data-id="12" data-confirm-require="[name=pks1]:checked" data-confirm-require-message="必须选中复选框" data-confirm="您确认要跳转过去吗？\n跳转后请仔细查看浏览器的地址栏；\n按后退返回此页！">单击此处跳转到 ./lib/artDialog-5.0.4/index.html</p>
 
-<p>必选</p>
+<p><label><input name="pks1" type="checkbox">必选</label></p>
 
 <h2>
 <a name="%E6%A8%A1%E6%8B%9F%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4post" class="anchor" href="#%E6%A8%A1%E6%8B%9F%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4post"><span class="octicon octicon-link"></span></a>模拟表单提交（POST）</h2>
@@ -247,10 +255,11 @@
 &lt;/form&gt;
 </code></pre>
 
-<p>post 请求到 ./lib/artDialog-5.0.4/index.html</p>
+<p><button type="button" class="btn btn-info action-post" data-form="#test-post-form" data-href="lib/artDialog-5.0.4/index.html" data-id="12" data-confirm-require="[name=pks]:checked" data-confirm-require-message="必须选中复选框" data-confirm="您确认要跳转过去吗？\n跳转后请按F5刷新下页面看看是否确实是post提交；\n按后退返回此页！">post 请求到 ./lib/artDialog-5.0.4/index.html</button></p>
 
-
-    必选
+<form id="test-post-form">
+    <label><input name="pks" value="选中了pks" type="checkbox">必选</label>
+</form>
 
 
 <h2>
@@ -390,9 +399,9 @@
 &lt;/button&gt;
 </code></pre>
 
-<p>
+<p><button type="button" class="btn btn-info dialog" data-url="input.html" data-title="弹出窗口" data-id="12" data-readonly="true">
     弹出窗口
-</p>
+</button></p>
 
 <h2>
 <a name="%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81" class="anchor" href="#%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81"><span class="octicon octicon-link"></span></a>表单验证</h2>
@@ -441,15 +450,19 @@
 </code></pre>
 
 
-    <div>
-        
+ <form id="signInForm" class="validate" method="post" role="form" action="../authc/signIn">
+    <div class="form-group">
+        <input class="form-control" name="email" placeholder="电子邮箱" data-rule-required="true" data-msg-required="请输入您的电子邮箱" data-rule-email="true" data-msg-email="请输入格式正确的电子邮箱" data-rule-maxlength="60" data-rule-remote="js/validate-email.json" data-msg-remote="该邮箱尚未注册" type="email">
+        <span class="icon-email"></span>
     </div>
-    <div>
-        
+    <div class="form-group">
+        <input name="password" class="form-control" placeholder="密码" data-rule-required="true" data-msg-required="请输入您的登陆密码" data-rule-minlength="6" data-msg-minlength="密码位数不得小于六位" type="password">
+        <span class="icon-password"></span>
     </div>
-    <div>
-        登录
+    <div class="form-group action">
+        <button id="login-action" type="submit" class="btn btn-primary btn-bg">登录</button>
     </div>
+</form>
 
 
 <h3>
