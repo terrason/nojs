@@ -105,7 +105,7 @@ var console = console || {
                 $fileInput.data("nojs.fileupload.display.$size", $("[name=" + _replaceMetacharator($fileInput.data("displaySize")) + "]", $form));
 
                 var needPreview = $fileInput.data("preview");
-                if (needPreview === undefined || needPreview === true) {
+                if (needPreview) {
                     var $preview = $('<img class="preview"/>');
                     $fileInput.after($preview);
                     $fileInput.data("nojs.fileupload.$preview", $preview);
@@ -238,6 +238,7 @@ var console = console || {
                     preview.options.$element.trigger("removefile", image.substr(srx.length));
                 });
                 this.$preview.append($previewItem);
+                return $previewItem;
             };
             this.removeImage = function(value) {
                 this.$preview.find(".preview-item").each(function() {
@@ -343,10 +344,10 @@ var console = console || {
                 }
                 schema.init($displayValue, preview);
                 $fileInput.on("addfile", function(event, value) {
-                    schema.addValue($displayValue, value, preview);
+                    schema.addValue($("[name=" + _replaceMetacharator($fileInput.data("displayValue")) + "]", $form), value, preview);
                 });
                 $fileInput.on("removefile", function(event, index) {
-                    schema.removeValue($displayValue, index, preview);
+                    schema.removeValue($("[name=" + _replaceMetacharator($fileInput.data("displayValue")) + "]", $form), index, preview);
                 });
 
                 $fileInput.fileupload({
@@ -561,6 +562,22 @@ var console = console || {
                     var $row = $(this).parents(module.selector.item);
                     $sortable.append($row);
                 });
+            });
+        }
+    };
+    $nojs.imgsource = {//更换img�?
+        enable: function() {
+            return !!window.srx;
+        },
+        selector: "img[data-src]",
+        init: function(context) {
+            var module = this;
+            $(module.selector.main, context).each(function() {
+                var $img = $(this);
+                var src = $img.attr("data-src");
+                if (src){
+                    $img.attr("src", window.srx + src);
+                }
             });
         }
     };
@@ -1095,9 +1112,9 @@ var console = console || {
                 });
             }
         },
-        back:{
-            selector:".action-back",
-            init:function(context){
+        back: {
+            selector: ".action-back",
+            init: function(context) {
                 $(this.selector, context).click(function() {
                     window.history.back();
                 });
