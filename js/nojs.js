@@ -1,25 +1,25 @@
-var console = console || {
-    log: function() {
+﻿var console = console || {
+    log: function () {
         return false;
     },
-    trace: function() {
+    trace: function () {
         return false;
     },
-    debug: function() {
+    debug: function () {
         return false;
     },
-    info: function() {
+    info: function () {
         return false;
     },
-    warn: function() {
+    warn: function () {
         return false;
     },
-    error: function() {
+    error: function () {
         return false;
     }
 };
-(function(window, $) {
-    var $application = function(context) {
+(function (window, $) {
+    var $application = function (context) {
         if ($.onApplicationStart && $.isFunction($.onApplicationStart)) {
             $.onApplicationStart();
         }
@@ -50,24 +50,24 @@ var console = console || {
         before: [],
         ready: []
     };
-    $nojs.before = function(func) {
+    $nojs.before = function (func) {
         event.before.push(func);
     };
-    $nojs.ready = function(func) {
+    $nojs.ready = function (func) {
         event.ready.push(func);
     };
 
     $application.statistical = {
-        enable: function() {
+        enable: function () {
             return !!$.fn.statistic;
         },
         selector: ".statistical",
-        init: function(context) {
+        init: function (context) {
             $(this.selector, context).statistic();
         }
     };
     $nojs.fileupload = {
-        enable: function() {
+        enable: function () {
             return !!$.fn.fileupload;
         },
         selector: ".fileupload:file:not([multiple])",
@@ -75,14 +75,14 @@ var console = console || {
             $progress: null,
             $progressBar: null,
             $progressText: null,
-            setValue: function(value) {
+            setValue: function (value) {
                 this.$progressBar.css("width", value + "%");
                 this.$progressText.text(value + "%");
             }
         },
-        init: function(context) {
+        init: function (context) {
             var module = this;
-            $(this.selector, context).each(function(i, fileInput) {
+            $(this.selector, context).each(function (i, fileInput) {
                 var $progress = $('<div class="progress progress-striped"><div class="progress-bar" style="width:0%"><span class="sr-only">0%</span></div></div>');
                 var $label = $('<p class="label"></p>');
                 var $fileInput = $(fileInput);
@@ -100,17 +100,22 @@ var console = console || {
 
                 var $form = $fileInput.parents("form");
                 var $displayValue = $("[name=" + _replaceMetacharator($fileInput.data("displayValue")) + "]", $form);
+                var $displayId = $("[name=" + _replaceMetacharator($fileInput.data("displayId")) + "]", $form);
                 $fileInput.data("nojs.fileupload.display.$name", $("[name=" + _replaceMetacharator($fileInput.data("displayName")) + "]", $form));
                 $fileInput.data("nojs.fileupload.display.$value", $displayValue);
                 $fileInput.data("nojs.fileupload.display.$size", $("[name=" + _replaceMetacharator($fileInput.data("displaySize")) + "]", $form));
+                $fileInput.data("nojs.fileupload.display.$id", $displayId);
 
                 var needPreview = $fileInput.data("preview");
-                if (needPreview) {
+                if (needPreview === true) {
                     var $preview = $('<img class="preview"/>');
                     $fileInput.after($preview);
                     $fileInput.data("nojs.fileupload.$preview", $preview);
-                    if ($displayValue.val()) {
-                        $preview.attr("src", srx + $displayValue.val());
+                    if ($displayId.val()) {
+                        $preview.attr("src", ctx + "/ajax/upfile/" + $displayId.val());//TODO attachement
+                    } else if ($displayValue.val()) {
+                        $preview.attr("data-src", $displayValue.val());
+                        $preview.trigger("change");
                     } else {
                         $preview.hide();
                     }
@@ -121,11 +126,11 @@ var console = console || {
                     replaceFileInput: false,
                     dataType: 'json',
                     formData: null,
-                    progressall: function(e, data) {
+                    progressall: function (e, data) {
                         var progress = parseInt(data.loaded / data.total * 100, 10);
                         $(this).data("nojs.fileupload.progress").setValue(progress);
                     },
-                    add: function(e, data) {
+                    add: function (e, data) {
                         data.fileInput.data("nojs.fileupload.$statusBar").text('Uploading...');
                         data.fileInput.data("nojs.fileupload.progress").setValue(0);
                         data.fileInput.data("nojs.fileupload.progress").$progress.show();
@@ -137,7 +142,7 @@ var console = console || {
                         }
                         data.submit();
                     },
-                    done: function(e, data) {
+                    done: function (e, data) {
                         var result = data.result;
                         if (result.code < 0) {
                             if (result.message) {
@@ -151,17 +156,26 @@ var console = console || {
                         var $preview = data.fileInput.data("nojs.fileupload.$preview");
                         if ($preview) {
                             $preview.show();
-                            $preview.attr("src", srx + result.value);
+                            $preview.attr("data-src", result.value);
+                            $preview.trigger("change");
                         }
 
                         var $displayName = data.fileInput.data("nojs.fileupload.display.$name");
                         var $displayValue = data.fileInput.data("nojs.fileupload.display.$value");
                         var $displaySize = data.fileInput.data("nojs.fileupload.display.$size");
+                        var $displayId = data.fileInput.data("nojs.fileupload.display.$id");
                         $displayName.val(data.originalFiles[0].name);
                         $displayValue.val(result.value);
                         $displaySize.val(result.size);
-                        if ($displayValue.parents("form").data("validator")) {
-                            $displayValue.parents("form").validate().element($displayValue[0]);
+                        $displayId.val(result.id);
+                        var validator = $displayValue.parents("form").data("validator");
+                        if (validator) {
+                        	if($displayValue[0]){
+                        		validator.element($displayValue[0]);
+                        }
+                        	if($displayId[0]){
+                        		validator.element($displayId[0]);
+                        	}
                         }
 
                         data.fileInput.data("nojs.fileupload.$statusBar").hide();
@@ -172,7 +186,7 @@ var console = console || {
         }
     };
     $nojs.fileuploadMultiple = {
-        enable: function() {
+        enable: function () {
             return !!$.fn.fileupload;
         },
         selector: ".fileupload:file[multiple]",
@@ -189,78 +203,78 @@ var console = console || {
             $preview: $('<div class="clearfix preview"></div>'),
             $previewItem: $('<div class="clearfix preview-item"><button type="button" class="close">&times;</button><img class="img-responsive"/></div>')
         },
-        progress: function($progress) {
+        progress: function ($progress) {
             this.$progress = $progress;
-            this.setValue = function(value) {
+            this.setValue = function (value) {
                 this.$progress.show();
                 var $progressBar = this.$progress.find(".progress-bar");
                 $progressBar.css("width", value + "%");
                 $progressBar.children().text(value + "%");
             };
-            this.show = function() {
+            this.show = function () {
                 this.setValue(0);
                 this.$progress.show();
             };
-            this.hide = function() {
+            this.hide = function () {
                 this.$progress.hide();
             };
         },
-        label: function($label) {
+        label: function ($label) {
             this.$label = $label;
-            this.setText = function(txt) {
+            this.setText = function (txt) {
                 this.$label.text(txt);
                 this.$label.show();
             };
-            this.show = function() {
+            this.show = function () {
                 this.$label.show();
             };
-            this.hide = function() {
+            this.hide = function () {
                 this.$label.hide();
             };
         },
-        preview: function($preview, options) {
+        preview: function ($preview, options) {
             this.options = options;
             this.$preview = $preview;
-            this.addImage = function(image) {
+            this.addImage = function (id) {
                 var preview = this;
                 var $previewItem = $nojs.fileuploadMultiple.$template.$previewItem.clone();
-                $previewItem.data("value", image);
+                $previewItem.data("value", id);
+                $previewItem.attr("id", id);
                 var $img = $previewItem.find("img");
-                $img.attr("src", image);
-                $img.attr("title", image.substr(srx.length));
+                $img.attr("src", this.getPreviewUrl(id));
+                $img.attr("title", "attachment-" + id);
                 if (preview.options.previewWidth) {
                     $img.css("width", preview.options.width);
                 }
                 if (preview.options.previewHeight) {
                     $img.css("height", preview.options.height);
                 }
-                $previewItem.find("button.close").click(function() {
-                    preview.options.$element.trigger("removefile", image.substr(srx.length));
+                $previewItem.find("button.close").click(function () {
+                    preview.options.$element.trigger("removefile", id);
                 });
                 this.$preview.append($previewItem);
                 return $previewItem;
             };
-            this.removeImage = function(value) {
-                this.$preview.find(".preview-item").each(function() {
-                    var $item = $(this);
-                    if ($item.data("value") === srx + value) {
-                        $item.remove();
-                    }
-                });
+            this.removeImage = function (id) {
+                this.$preview.find("#" + id).remove();
+            };
+
+            this.getPreviewUrl = function (id) {
+                return ctx + "/ajax/upfile/" + id;//TODO attachment
             };
         },
         schema: {
             string: {
-                init: function($value, preview) {
+                init: function ($value, preview) {
                     var originValue = $value.val();
                     if (originValue) {
                         var values = originValue.split(",");
                         for (var i = 0; i < values.length; i++) {
-                            preview.addImage(srx + values[i]);
+                            preview.addImage(values[i]);
                         }
                     }
                 },
-                addValue: function($value, value, preview) {
+                addValue: function ($value, value, preview) {
                     var originValue = $value.val();
                     if (originValue) {
                         $value.val(originValue + "," + value);
@@ -270,18 +284,22 @@ var console = console || {
                     if ($value.parents("form").data("validator")) {
                         $value.parents("form").validate().element($value[0]);
                     }
-                    preview.addImage(srx + value);
+                    preview.addImage(value);
                 },
-                removeValue: function($value, value, preview) {
+                removeValue: function ($value, value, preview) {
                     var originValue = $value.val();
                     if (originValue) {
                         var pieces = originValue.split(",");
                         var newValue = "";
                         for (var i = 0; i < pieces.length; i++) {
-                            if (pieces[i] !== value) {
+                            var cur = pieces[i];
+                            var valueStr = value + "";
+
+                            if (cur === valueStr) {
+                                continue;
+                            }
                                 newValue += (pieces[i] + ",");
                             }
-                        }
                         if (newValue.length) {
                             newValue = newValue.substr(0, newValue.length - 1);
                         }
@@ -291,18 +309,18 @@ var console = console || {
                 }
             }
         },
-        init: function(context) {
+        init: function (context) {
             var module = this;
-            $(this.selector, context).each(function(i, fileInput) {
+            $(this.selector, context).each(function (i, fileInput) {
                 var $fileInput = $(fileInput);
                 $fileInput.attr("name", "upfile");
 
                 var opt = $.extend({}, module.options, $fileInput.data());
                 opt.$element = $fileInput;
                 var progress = {
-                    setValue: function() {
-                    }, show: function() {
-                    }, hide: function() {
+                    setValue: function () {
+                    }, show: function () {
+                    }, hide: function () {
                     }};
                 if (opt.showProgress) {
                     var $progress = module.$template.$progress.clone();
@@ -312,9 +330,9 @@ var console = console || {
                 }
                 $fileInput.data("nojs.fileupload.progress", progress);
 
-                var label = {setText: function() {
-                    }, show: function() {
-                    }, hide: function() {
+                var label = {setText: function () {
+                    }, show: function () {
+                    }, hide: function () {
                     }};
                 if (opt.showLabel) {
                     var $label = module.$template.$label.clone();
@@ -324,8 +342,8 @@ var console = console || {
                 }
                 $fileInput.data("nojs.fileupload.label", label);
 
-                var preview = {addImage: function() {
-                    }, removeImage: function() {
+                var preview = {addImage: function () {
+                    }, removeImage: function () {
                     }};
                 if (opt.showPreview) {
                     var $preview = module.$template.$preview.clone();
@@ -335,19 +353,19 @@ var console = console || {
                 $fileInput.data("nojs.fileupload.preview", preview);
 
                 var $form = $fileInput.parents("form");
-                var $displayValue = $("[name=" + _replaceMetacharator($fileInput.data("displayValue")) + "]", $form);
+                var $displayId = $("[name=" + _replaceMetacharator($fileInput.data("displayId")) + "]", $form);
 
                 var schema = module.schema[opt.schema];
                 if (!schema) {
                     console.warn("nojs.fileupload dosn't recognize the schema:" + opt.schema);
                     return;
                 }
-                schema.init($displayValue, preview);
-                $fileInput.on("addfile", function(event, value) {
-                    schema.addValue($("[name=" + _replaceMetacharator($fileInput.data("displayValue")) + "]", $form), value, preview);
+                schema.init($displayId, preview);
+                $fileInput.on("addfile", function (event, value) {
+                    schema.addValue($("[name=" + _replaceMetacharator($fileInput.data("displayId")) + "]", $form), value, preview);
                 });
-                $fileInput.on("removefile", function(event, index) {
-                    schema.removeValue($("[name=" + _replaceMetacharator($fileInput.data("displayValue")) + "]", $form), index, preview);
+                $fileInput.on("removefile", function (event, value) {
+                    schema.removeValue($("[name=" + _replaceMetacharator($fileInput.data("displayId")) + "]", $form), value, preview);
                 });
 
                 $fileInput.fileupload({
@@ -356,11 +374,11 @@ var console = console || {
                     dataType: 'json',
                     sequentialUploads: true,
                     formData: null,
-                    progressall: function(e, data) {
+                    progressall: function (e, data) {
                         var progressValue = parseInt(data.loaded / data.total * 100, 10);
                         progress.setValue(progressValue);
                     },
-                    add: function(e, data) {
+                    add: function (e, data) {
                         var validator = data.fileInput.parents("form").data("validator");
                         if (validator) {
                             if (!validator.element(data.fileInput[0])) {
@@ -371,7 +389,7 @@ var console = console || {
                         progress.show();
                         data.submit();
                     },
-                    done: function(e, data) {
+                    done: function (e, data) {
                         var result = data.result;
                         if (result.code < 0) {
                             if (result.message) {
@@ -381,7 +399,7 @@ var console = console || {
                             }
                             return;
                         }
-                        data.fileInput.trigger("addfile", result.value);
+                        data.fileInput.trigger("addfile", result.id);
 
                         label.hide();
                         progress.hide();
@@ -391,26 +409,78 @@ var console = console || {
         }
     };
     $nojs.pagination = {
-        enable: function() {
+        enable: function () {
             return !!$.fn.pager;
         },
         selector: ".pager-list",
-        init: function(context) {
+        init: function (context) {
             $(this.selector, context).pager();
+        }
+    };
+    $nojs.wysiwygEditor = {
+        enable: function () {
+            return !!$.fn.ace_wysiwyg;
+        },
+        selector: ".wysiwyg-editor",
+        options: {
+            toolbar: [
+                {name: 'font', title: "字体"},
+                null,
+                {name: 'fontSize', title: "字号"},
+                null,
+                {name: 'bold', className: 'btn-info', title: "粗体"},
+                {name: 'italic', className: 'btn-info', title: "斜体"},
+                {name: 'strikethrough', className: 'btn-info', title: "删除线"},
+                {name: 'underline', className: 'btn-info', title: "下划线"},
+                null,
+                {name: 'insertunorderedlist', className: 'btn-success', title: "无序列表"},
+                {name: 'insertorderedlist', className: 'btn-success', title: "有序列表"},
+                {name: 'outdent', className: 'btn-purple', title: "增加缩进"},
+                {name: 'indent', className: 'btn-purple', title: "减少缩进"},
+                null,
+                {name: 'justifyleft', className: 'btn-primary', title: "左对齐"},
+                {name: 'justifycenter', className: 'btn-primary', title: "居中"},
+                {name: 'justifyright', className: 'btn-primary', title: "右对齐"},
+                {name: 'justifyfull', className: 'btn-inverse', title: "两端对齐"},
+                null,
+                {name: 'createLink', className: 'btn-pink', title: "加入超链接"},
+                {name: 'unlink', className: 'btn-pink', title: "移除超链接"},
+                null,
+                {name: 'insertImage', className: 'btn-success', title: "插入图片"},
+                null,
+                {name: 'foreColor', title: "颜色"},
+                null,
+                {name: 'undo', className: 'btn-grey', title: "撤销"},
+                {name: 'redo', className: 'btn-grey', title: "重做"}
+            ]
+        },
+        init: function (context) {
+            var module = this;
+            $(module.selector, context).each(function () {
+                var $editor = $(this);
+                var opt = $.extend({}, module.options, $editor.data());
+                $editor.ace_wysiwyg(opt);
+
+                var $form = $editor.closest("form");
+                var $input = $("[name=" + opt.bindInput + "]", $form);
+                $form.submit(function () {
+                    $input.val($editor.cleanHtml());
+                });
+            });
         }
     };
 
 
     $nojs.WdatePicker = {
-        enable: function() {
+        enable: function () {
             return !!window.WdatePicker;         //jquery.ui
         },
         selector: "input.Wdate",
-        init: function(context) {
-            $(this.selector, context).each(function(i, dt) {
+        init: function (context) {
+            $(this.selector, context).each(function (i, dt) {
                 var $input = $(dt);
                 var option = $input.data();
-                $input.click(function() {
+                $input.click(function () {
                     WdatePicker.call(dt, option);
                 });
             });
@@ -418,25 +488,42 @@ var console = console || {
     };
 
     $nojs.datetimepicker = {
-        enable: function() {
+        enable: function () {
             return !!$.fn.datetimepicker;
         },
+        options: {
+            autoclose: true,
+            language: "zh-CN"
+        },
         selector: "input[type=datetime]",
-        init: function(context) {
-            $(this.selector, context).each(function(i, dt) {
+        init: function (context) {
+            var module = this;
+            $(this.selector, context).each(function (i, dt) {
                 var $input = $(dt);
-                var option = $input.data();
+                var option = $.extend({}, module.options, $input.data());
                 $input.datetimepicker(option);
+
+                $input.next("[class*=icon-]").click(function () {
+                    $input.focus();
+            });
             });
         }
     };
+    $nojs.timepicker = $.extend(true, {}, $nojs.datetimepicker, {
+        options: {
+            format: "HH:ii",
+            startView: 1,
+            maxView: 1
+        },
+        selector: "input[type=time]"
+    });
     $nojs.nailing = {
-        enable: function() {
+        enable: function () {
             return !!$.fn.nails;
         },
         selector: ".nailing",
-        init: function(context) {
-            $(this.selector, context).each(function() {
+        init: function (context) {
+            $(this.selector, context).each(function () {
                 var $nailing = $(this);
                 $nailing.nails($nailing.data());
             });
@@ -449,9 +536,9 @@ var console = console || {
             alterClass: "hilight",
             row: "tr:even"
         },
-        init: function(context) {
+        init: function (context) {
             var module = this;
-            $(this.selector, context).each(function() {
+            $(this.selector, context).each(function () {
                 var $table = $(this);
                 var opt = $.extend({}, module.option, $table.data());
                 $(opt.row, $table).addClass(opt.alterClass);
@@ -462,11 +549,11 @@ var console = console || {
         enable: true,
         selector: ".hoverable,.tab1 tr",
         defaultHoverClass: "over",
-        init: function(context) {
+        init: function (context) {
             var module = this;
-            $(this.selector, context).mouseenter(function() {
+            $(this.selector, context).mouseenter(function () {
                 $(this).addClass($(this).data("hoverClass") || module.defaultHoverClass);
-            }).mouseleave(function() {
+            }).mouseleave(function () {
                 $(this).removeClass($(this).data("hoverClass") || module.defaultHoverClass);
             });
         }
@@ -475,13 +562,13 @@ var console = console || {
         enable: true,
         selector: ".activable",
         defaultActiveClass: "activated",
-        init: function(context) {
+        init: function (context) {
             var module = this;
-            $(this.selector, context).mousedown(function() {
+            $(this.selector, context).mousedown(function () {
                 var $this = $(this);
                 var activeClass = $this.data("activeClass") || module.defaultActiveClass;
                 $this.addClass(activeClass);
-            }).mouseup(function() {
+            }).mouseup(function () {
                 var $this = $(this);
                 var activeClass = $this.data("activeClass") || module.defaultActiveClass;
                 $this.removeClass(activeClass);
@@ -497,11 +584,11 @@ var console = console || {
         },
         collapsedClass: "collapsed", //+折叠
         event: ["$nojs-collapsible-beforeExpand", "$nojs-collapsible-afterExpand", "$nojs-collapsible-beforeCollapses", "$nojs-collapsible-afterCollapses"],
-        init: function(context) {
+        init: function (context) {
             this.context = context;
             var module = this;
-            $(module.selector.context, context).each(function(i, thisContext) {
-                $(module.selector.controller, thisContext).click(function() {
+            $(module.selector.context, context).each(function (i, thisContext) {
+                $(module.selector.controller, thisContext).click(function () {
                     var $controller = $(this);
                     var $content = $("#" + $controller.attr("for"), thisContext);
                     var $thisContext = $(thisContext);
@@ -522,7 +609,7 @@ var console = console || {
         }
     };
     $nojs.sortable = {//排序模块
-        enable: function() {
+        enable: function () {
             return !!$.fn.sortable;
         },
         selector: {
@@ -537,57 +624,108 @@ var console = console || {
             cursor: "move",
             placeholder: "list-group-item ui-state-highlight"
         },
-        init: function(context) {
+        init: function (context) {
             var module = this;
-            $(module.selector.main, context).each(function() {
+            $(module.selector.main, context).each(function () {
                 var $sortable = $(this);
                 var opt = $.extend(module.option, $sortable.data());
                 $sortable.sortable(opt);
 
-                $(module.selector.up, $sortable).click(function() {
+                $(module.selector.up, $sortable).click(function () {
                     var $row = $(this).parents(module.selector.item);
                     var $prev = $row.prev();
                     $prev.before($row);
                 });
-                $(module.selector.down, $sortable).click(function() {
+                $(module.selector.down, $sortable).click(function () {
                     var $row = $(this).parents(module.selector.item);
                     var $next = $row.next();
                     $next.after($row);
                 });
-                $(module.selector.top, $sortable).click(function() {
+                $(module.selector.top, $sortable).click(function () {
                     var $row = $(this).parents(module.selector.item);
                     $sortable.prepend($row);
                 });
-                $(module.selector.bottom, $sortable).click(function() {
+                $(module.selector.bottom, $sortable).click(function () {
                     var $row = $(this).parents(module.selector.item);
                     $sortable.append($row);
                 });
             });
         }
     };
-    $nojs.imgsource = {//更换img�?
-        enable: function() {
+    $nojs.imgsource = {//更换img源
+        enable: function () {
             return !!window.srx;
         },
         selector: "img[data-src]",
-        init: function(context) {
-            var module = this;
-            $(module.selector.main, context).each(function() {
+        handler:function(){
                 var $img = $(this);
                 var src = $img.attr("data-src");
-                if (src){
+                if (src) {
+                if (/^(http|https|ftp):\/\/.*/.test(src)) {
+                    $img.attr("src", src);
+                } else {
                     $img.attr("src", window.srx + src);
+                }
+            }
+        },
+        init: function (context) {
+        	$(document).on("change","img[data-src]",function(){
+        		module.handler.call($(this));
+            });
+            var module = this;
+            $(module.selector, context).each(function () {
+                $(this).trigger("change");
+            });
+        }
+    };
+    $nojs.attachment = {//更换img源
+        enable: function () {
+            return !!window.srx;
+        },
+        selector: "img[data-attachment]",
+        init: function (context) {
+            var module = this;
+            $(module.selector, context).each(function () {
+                var $img = $(this);
+                var src = $img.attr("data-attachment");
+                if (src) {
+                    if (/^(http|https|ftp):\/\/.*/.test(src)) {
+                        $img.attr("src", src);
+                    } else if (src === "0") {
+                    } else {
+                        $img.attr("src", ctx + "/ajax/upfile/" + src);
+                    }
+                }
+            });
+        }
+    };
+    $nojs.ahref = {//更换img源
+        enable: function () {
+            return !!window.srx;
+        },
+        selector: "a[data-href]",
+        init: function (context) {
+            var module = this;
+            $(module.selector, context).each(function () {
+                var $img = $(this);
+                var src = $img.attr("data-href");
+                if (src) {
+                    if (/^(http|https|ftp):\/\/.*/.test(src)) {
+                        $img.attr("href", src);
+                    } else {
+                        $img.attr("href", window.srx + src);
+                    }
                 }
             });
         }
     };
     $nojs.slider = {//滑块
-        enable: function() {
+        enable: function () {
             return !!$.fn.slider;
         },
         selector: ".slider",
         option: {
-            slide: function(event, ui) {
+            slide: function (event, ui) {
                 var $slider = $(this);
                 var display = $slider.data("nojs.slider.display");
                 if ($.isArray(display)) {
@@ -606,9 +744,9 @@ var console = console || {
                 }
             }
         },
-        init: function(context) {
+        init: function (context) {
             var module = this;
-            $(module.selector, context).each(function() {
+            $(module.selector, context).each(function () {
                 var $slider = $(this);
                 var opt = $.extend({}, module.option, $slider.data());
                 if (opt.range) {
@@ -650,12 +788,12 @@ var console = console || {
         }
     };
     $nojs.selectable = {//选择效果
-        enable: function() {
+        enable: function () {
             return !!$.fn.selectable;
         },
         selector: ".selectable",
         option: {},
-        init: function(context) {
+        init: function (context) {
             $(this.selector, context).selectable();
         }
     };
@@ -666,9 +804,9 @@ var console = console || {
             target: "tr",
             move: "top"
         },
-        init: function(context) {
+        init: function (context) {
             var opt = this.option;
-            $(this.selector, context).click(function() {
+            $(this.selector, context).click(function () {
                 var $this = $(this);
                 var option = $.extend({}, opt, $this.data());
                 var $target = $this.parents(option.target);
@@ -690,15 +828,15 @@ var console = console || {
         pks: "[name=pks]:checkbox:not(:disabled)",
         //pks: "[name=pks]:checkbox",
         render: ":button[data-confirm-require=pks]",
-        init: function(context) {
+        init: function (context) {
             var $pks = $(this.pks, context);
             var $chkAll = $(this.chkAll, context);
             var $render = $(this.render, context);
-            $pks.click(function() {
+            $pks.click(function () {
                 $chkAll.prop("checked", $pks.length === $pks.filter(":checked").length);
                 $render.prop("disabled", $pks.filter(":checked").length === 0);
             });
-            $chkAll.click(function() {
+            $chkAll.click(function () {
                 $pks.prop("checked", $(this).prop("checked"));
                 $render.prop("disabled", $pks.filter(":checked").length === 0);
                 $pks.change();
@@ -709,11 +847,11 @@ var console = console || {
     $nojs.checkboxTogether = {
         enable: true,
         selector: "input:checkbox[data-member]",
-        $member: function($leader, context) {
+        $member: function ($leader, context) {
             var memberName = $leader.data("member");
             return $("input:checkbox[name=" + memberName + "]:not(:disabled)", context);
         },
-        render: function($leader, $member, context) {
+        render: function ($leader, $member, context) {
             var $render = $leader.data("$render");
             if ($render === false) {
                 return;
@@ -730,16 +868,16 @@ var console = console || {
             }
             $render.prop("disabled", $member.filter(":checked").length === 0);
         },
-        init: function(context) {
+        init: function (context) {
             var module = this;
-            $(module.selector, context).each(function() {
+            $(module.selector, context).each(function () {
                 var $leader = $(this);
                 var $member = module.$member($leader, context);
-                $leader.change(function() {
+                $leader.change(function () {
                     $member.prop("checked", $leader.prop("checked"));
                     module.render($leader, $member, context);
                 });
-                $member.change(function() {
+                $member.change(function () {
                     $leader.prop("checked", $member.length === $member.filter(":checked").length);
                     module.render($leader, $member, context);
                 });
@@ -748,26 +886,27 @@ var console = console || {
         }
     };
     $nojs.validation = {
-        enable: function() {
+        enable: function () {
             return !!$.fn.validate;
         },
         selector: "form.validate",
-        init: function(context) {
+        init: function (context) {
             var $form = $(this.selector, context);
             var option = {
-                highlight: function(element) {
+                ignore: "[data-novalidate]",
+                highlight: function (element) {
                     $(element).closest('.form-group').addClass('has-error');
                 },
-                unhighlight: function(element) {
+                unhighlight: function (element) {
                     $(element).closest('.form-group').removeClass('has-error');
                 },
                 errorElement: 'label',
                 errorClass: 'help-inline',
-                errorPlacement: function(error, element) {
+                errorPlacement: function (error, element) {
                     $(element).closest('.form-group').append(error);
                 }
             };
-            $form.each(function() {
+            $form.each(function () {
                 var $form = $(this);
                 var validation = $form.validate($.extend(option, $form.data()));
             });
@@ -776,10 +915,10 @@ var console = console || {
     $nojs.readonly = {
         enable: true,
         selector: ".readonly",
-        init: function(context) {
+        init: function (context) {
             var $readonlyContext = $(this.selector, context);
             $readonlyContext.find(":input").prop("readonly", true);
-            $readonlyContext.find("textarea").each(function() {
+            $readonlyContext.find("textarea").each(function () {
                 var $textarea = $(this);
                 if ($textarea.hasClass("editor")) {
                     var text = $textarea.text();
@@ -794,7 +933,7 @@ var console = console || {
         }
     };
     $nojs.arrayDictionary = {
-        enable: function() {
+        enable: function () {
             return !!window.dictionaryData;
         },
         selector: ".dictionary",
@@ -804,7 +943,7 @@ var console = console || {
             parent: /(^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*)))\->([a-zA-Z0-9.]+)+/
         },
         $template: $("<option></option>"),
-        _resolveRelation: function(obj, path) {
+        _resolveRelation: function (obj, path) {
             if (!obj) {
                 return null;
             }
@@ -816,9 +955,9 @@ var console = console || {
                 return this._resolveRelation(value, path);
             }
         },
-        init: function(context) {
+        init: function (context) {
             var module = this;
-            $(this.selector, context).on(this.event, function(event) {
+            $(this.selector, context).on(this.event, function (event) {
                 var $dictionary = $(this);
                 var key = $dictionary.data("dictKey");
                 var value = $dictionary.data("value");
@@ -838,7 +977,7 @@ var console = console || {
 
                 if ($dictionary.is(":not(select)")) {
                     var val = value || $dictionary.text();
-                    $.each(dictionaryList, function(i, obj) {
+                    $.each(dictionaryList, function (i, obj) {
                         if (obj[dictName] == val) {
                             if ($dictionary.is("input")) {
                                 $dictionary.val(obj[dictValue]);
@@ -863,7 +1002,7 @@ var console = console || {
                     var dictionaryPath = dictionaryExpression.split(/\./);
 
                     var $parentSelect = $(parentSelector);
-                    $parentSelect.change(function(event) {
+                    $parentSelect.change(function (event) {
                         var $trigger = $(this);
                         var parentValue = $trigger.val();
 
@@ -875,10 +1014,10 @@ var console = console || {
                                     .attr("value", "")
                                     .appendTo($select);
                         }
-//          if(!parentValue){// 0==""==false
-//              return;
-//          }
-                        $.each(dictionaryList, function(i, obj) {
+//			if(!parentValue){// 0==""==false
+//			    return;
+//			}
+                        $.each(dictionaryList, function (i, obj) {
                             var relation = module._resolveRelation(obj, dictionaryPath.slice(0));
                             if (relation == parentValue) {
                                 var $option = module.$template.clone();
@@ -899,7 +1038,7 @@ var console = console || {
                                 .attr("value", "")
                                 .appendTo($select);
                     }
-                    $.each(dictionaryList, function(i, obj) {
+                    $.each(dictionaryList, function (i, obj) {
                         var $option = module.$template.clone();
                         $option.text(obj[dictValue]);
                         $option.attr("value", obj[dictName]);
@@ -907,7 +1046,7 @@ var console = console || {
                     });
                 }
 
-                $nojs.ready(function() {
+                $nojs.ready(function () {
                     $dictionary.change();
                 });
             }).trigger(this.event);
@@ -917,8 +1056,8 @@ var console = console || {
         enable: true,
         selector: "select",
         event: "$nojs-select-initialize",
-        init: function(context) {
-            $(this.selector, context).on(this.event, function(event) {
+        init: function (context) {
+            $(this.selector, context).on(this.event, function (event) {
                 var $select = $(this);
                 var value = $select.data("value");
                 if (value !== undefined) {
@@ -927,7 +1066,7 @@ var console = console || {
                 }
                 var autofire = $select.data("autofire");
                 if (autofire) {
-                    $nojs.ready(function() {
+                    $nojs.ready(function () {
                         $select.change();
                     });
                 }
@@ -938,8 +1077,8 @@ var console = console || {
         enable: true,
         selector: ".radio-group",
         event: "$nojs-radio-initialize",
-        init: function(context) {
-            $(this.selector, context).on(this.event, function(event) {
+        init: function (context) {
+            $(this.selector, context).on(this.event, function (event) {
                 var $group = $(this);
                 var value = $group.data("value");
                 if (value !== undefined) {
@@ -954,14 +1093,14 @@ var console = console || {
         }
     };
     $nojs.dropdownValueBind = {
-        enable: function() {
+        enable: function () {
             return !!$.fn.dropdown;
         },
         selector: "[data-toggle=dropdown][data-value]",
         event: "change.$nojs-dropdown",
-        init: function(context) {
+        init: function (context) {
             var module = this;
-            $(module.selector, context).each(function() {
+            $(module.selector, context).each(function () {
                 var $trigger = $(this);
                 var value = $trigger.attr("data-value");
                 if (value) {
@@ -972,18 +1111,18 @@ var console = console || {
                     module.setValue($trigger, value);
                 }
 
-                $trigger.next().find("[data-value]").click(function() {
+                $trigger.next().find("[data-value]").click(function () {
                     var $this = $(this);
                     module.setText($trigger, $this.text());
                     module.setValue($trigger, $this.attr("data-value"));
                 });
             });
         },
-        setText: function($trigger, text) {
+        setText: function ($trigger, text) {
             $(":text", $trigger).val(text);
             $(".display", $trigger).text(text);
         },
-        setValue: function($trigger, value) {
+        setValue: function ($trigger, value) {
             var $value = $("input:hidden", $trigger);
 
             var oldValue = $value.val();
@@ -995,8 +1134,8 @@ var console = console || {
     $nojs.trimText = {
         enable: true,
         selector: ":text:not([data-skip-trim])",
-        init: function(context) {
-            $(this.selector, context).change(function() {
+        init: function (context) {
+            $(this.selector, context).change(function () {
                 this.value = $.trim(this.value);
             });
         }
@@ -1008,10 +1147,10 @@ var console = console || {
             control: ":input",
             form: "form.lookup"
         },
-        init: function(context) {
+        init: function (context) {
             var $lookupForm = $(this.selector.form, context);
             var controlSelector = this.selector.control;
-            $(this.selector.reset, $lookupForm).click(function() {
+            $(this.selector.reset, $lookupForm).click(function () {
                 $(controlSelector, $lookupForm).val("");
                 $lookupForm.submit();
             });
@@ -1019,7 +1158,7 @@ var console = console || {
     };
     $nojs.action = {//模拟表单提交和标签
         enable: true,
-        init: function(context) {
+        init: function (context) {
             for (var name in this) {
                 var module = this[name];
                 if (module && module.init) {
@@ -1027,18 +1166,21 @@ var console = console || {
                 }
             }
         },
-        addModule: function(name, module) {
+        addModule: function (name, module) {
             if (module && module.init) {
                 this[name] = module;
             }
         },
-        removeModule: function(name) {
+        removeModule: function (name) {
             this[name] = undefined;
         },
         get: {
             selector: ".action-get",
-            init: function(context) {
-                $(this.selector, context).click(function() {
+            init: function (context) {
+                $(this.selector, context).click(function (e) {
+                    if (e.isDefaultPrevented()) {
+                        return false;
+                    }
                     var $button = $(this);
                     var confirmRequire = $button.data("confirmRequire");
                     if (confirmRequire) {
@@ -1052,19 +1194,61 @@ var console = console || {
                     if (confirm) {
                         if (typeof (confirm) === "boolean") {
                             confirm = "您确定要执行此项操作吗？";
+                        } else {
+                            confirm += "\n\n   您确定要执行此项操作吗？";
                         }
                         if (!window.confirm(confirm)) {
                             return;
                         }
                     }
-                    window.location = ($button.data("href") || $button.data("get")) + "?" + $.param($button.data());
+                    var href = $button.data("href") || $button.data("get");
+                    if (!/^\//.test(href)) {
+
+                        var index = window.location.href.indexOf("?");
+                        var location = window.location.href.substring(0, index);
+                        href = location + href;
+                    }
+
+                    var $params = $(".action-param", $button);
+                    if ($params.length) {
+                        href = href + "?1=1";
+                        $params.each(function (i, paramSpan) {
+                            var $param = $(paramSpan);
+                            href += "&" + $param.data("key") + "=" + encodeURIComponent($param.data("value"));
+                });
+                    } else {
+                        var paramData = $button.data();
+                        href += "?" + $.param(paramData, true);
+            }
+
+                    var formSelector = $button.data("form");
+                    if (!formSelector) {
+                        window.location = href;
+                    } else {
+                        var $form;
+                        if ($.type(formSelector) === "string") {
+                            $form = $(formSelector, context);
+                        } else {
+                            $form = $button.parents("form");
+                        }
+                        if (!$form.length) {
+                            console.error("找不到绑定的表单");
+                            return;
+                        }
+                        $form.attr("method", "get");
+                        $form.attr("action", href);
+                        $form.submit();
+                    }
                 });
             }
         },
         post: {
             selector: ".action-post",
-            init: function(context) {
-                $(this.selector, context).click(function() {
+            init: function (context) {
+                $(this.selector, context).click(function (e) {
+                    if (e.isDefaultPrevented()) {
+                        return false;
+                    }
                     var $this = $(this);
                     var confirmRequire = $this.data("confirmRequire");
                     if (confirmRequire) {
@@ -1078,12 +1262,14 @@ var console = console || {
                     if (confirm) {
                         if (typeof (confirm) === "boolean") {
                             confirm = "您确定要执行此项操作吗？";
+                        } else {
+                            confirm += "\n\n   您确定要执行此项操作吗？";
                         }
                         if (!window.confirm(confirm)) {
                             return;
                         }
                     }
-                    
+
                     var $form = $this.parents("form");
                     var formSelector = $this.data("form");
                     if (formSelector) {
@@ -1099,7 +1285,7 @@ var console = console || {
                     }
                     $form.attr("method", "post");
                     var data = $this.data();
-                    $.each(data, function(key, value) {
+                    $.each(data, function (key, value) {
                         if (value) {
                             var $input = $("<input type=\"hidden\" class=\"help\"/>");
                             $form.append($input);
@@ -1114,76 +1300,44 @@ var console = console || {
         },
         back: {
             selector: ".action-back",
-            init: function(context) {
-                $(this.selector, context).click(function() {
-                    window.history.back();
-                });
-            }
-        },
-        /**
-         * @deprecated Use $nojs.dialog instead.
-         */
-        dialog: {
-            selector: ".action-dialog",
-            init: function(context) {
-                $(this.selector, context).click(function() {
-                    var $actionButton = $(this);
-                    var data = $actionButton.data();
-                    var option = $.extend({
-                        lock: true,
-                        okValue: "保存",
-                        ok: function() {
-                            var $form = $("form", this.dom.content);
-                            $form.find("button[type=submit]").click();
+            init: function (context) {
+                $(this.selector, context).click(function (e) {
+                    if (e.isDefaultPrevented()) {
                             return false;
-                        },
-                        cancelValue: "取消",
-                        cancel: function() {
-                            return true;
                         }
-                    }, data);
-                    if (data.readonly) {
-                        option.ok = undefined;
-                    }
-                    var dialog = $.dialog(option);
-                    $.ajax({
-                        url: data.url,
-                        dataType: "html",
-                        cache: false,
-                        data: data
-                    }).done(function(data, textStatus, jqXHR) {
-                        var $dialog = $(data);
-                        dialog.content($dialog[0]);
-                        var $form = $dialog.is("form") ? $dialog : $("form", $dialog);
-                        $form.attr("action", option.dialogUrl || option.url);
-                        $nojs(dialog.dom.content);
+                    window.history.back();
                     });
-                });
             }
         }
     };
     $nojs.dialog = {//依赖artdialog-5.x
-        enable: function() {
+        enable: function () {
             return !!$.dialog;
         },
         selector: ".dialog",
         event: {
             remoteContentReady: "application.dialog.remote.ready"
         },
-        ok: function() {
+        ok: function () {
             var $form = $("form", this.dom.content);
             $form.find("button[type=submit]").click();
             return false;
         },
-        cancel: function() {
+        cancel: function () {
             return true;
         },
-        ready: function() {
+        ready: function () {
+            if ($.bootstrapIE6) {
+                $.bootstrapIE6(this.dom.content);
+            }
             $application(this.dom.content);
         },
-        init: function(context) {
+        init: function (context) {
             var thisModule = this;
-            $(thisModule.selector, context).click(function() {
+            $(thisModule.selector, context).click(function (e) {
+                if (e.isDefaultPrevented()) {
+                    return false;
+                }
                 var $actionButton = $(this);
                 var data = $actionButton.data();
                 var option = $.extend({
@@ -1202,7 +1356,7 @@ var console = console || {
                     dataType: "html",
                     cache: false,
                     data: data
-                }).done(function(data, textStatus, jqXHR) {
+                }).done(function (data, textStatus, jqXHR) {
                     var $dialog = $(data);
                     dialog.content($dialog[0]);
                     var $form = $dialog.is("form") ? $dialog : $("form", $dialog);
@@ -1212,6 +1366,17 @@ var console = console || {
                     thisModule.ready.call(dialog);
                     $actionButton.trigger(thisModule.event.remoteContentReady, {module: thisModule, dialog: dialog, $content: $dialog, $form: $form});
                 });
+            });
+        }
+    };
+    $nojs.closeable = {
+        enable: true,
+        init: function (context) {
+            $(document).on("click", "button.close", function (e) {
+                if (e.isDefaultPrevented()) {
+                    return false;
+                }
+                $(this).closest("[data-closeable]").remove();
             });
         }
     };
@@ -1226,16 +1391,16 @@ var console = console || {
     //Copy from jQuery.
     window.$application = window.$nojs = $application;
     if (typeof define === "function" && define.amd && define.amd.$nojs) {
-        define("$nojs", [], function() {
+        define("$nojs", [], function () {
             return $nojs;
         });
     }
 })(window, jQuery);
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     $.fn.extend({
-        pushData: function(name, value) {
+        pushData: function (name, value) {
             var data = this.data(name);
             if (!data) {
                 data = new Array();
